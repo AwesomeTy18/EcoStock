@@ -1,6 +1,6 @@
 const Payout = require('../models/Payout');
 
-const handlePayouts = (req, res) => {
+const handlePayouts = async (req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
     const method = req.method;
     const payoutIdMatch = parsedUrl.pathname.match(/\/payouts\/?(\d+)?/);
@@ -8,7 +8,7 @@ const handlePayouts = (req, res) => {
     if (method === 'GET') {
         const photographerId = parsedUrl.searchParams.get('photographer_id');
         if (photographerId) {
-            const payouts = Payout.findByPhotographerId(parseInt(photographerId));
+            const payouts = await Payout.findByPhotographerId(parseInt(photographerId));
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify(payouts));
@@ -21,11 +21,11 @@ const handlePayouts = (req, res) => {
         req.on('data', chunk => {
             body += chunk.toString();
         });
-        req.on('end', () => {
+        req.on('end', async () => {
             const { photographer_id, amount } = JSON.parse(body);
             if (photographer_id && amount) {
                 const payout = new Payout(parseInt(photographer_id), parseFloat(amount));
-                payout.save();
+                await payout.save();
                 res.statusCode = 201;
                 res.end('Payout created');
             } else {
@@ -40,10 +40,10 @@ const handlePayouts = (req, res) => {
             req.on('data', chunk => {
                 body += chunk.toString();
             });
-            req.on('end', () => {
+            req.on('end', async () => {
                 const { status } = JSON.parse(body);
                 if (status) {
-                    const updatedPayout = Payout.updateStatus(payoutId, status);
+                    const updatedPayout = await Payout.updateStatus(payoutId, status);
                     if (updatedPayout) {
                         res.statusCode = 200;
                         res.end('Payout status updated');

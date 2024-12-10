@@ -1,13 +1,13 @@
 const Notification = require('../models/Notification');
 
-const handleNotifications = (req, res) => {
+const handleNotifications = async (req, res) => { // Added async
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
     const method = req.method;
     
     if (method === 'GET') {
         const userId = parsedUrl.searchParams.get('user_id');
         if (userId) {
-            const notifications = Notification.findByUserId(parseInt(userId));
+            const notifications = await Notification.findByUserId(parseInt(userId)); // Added await
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify(notifications));
@@ -20,11 +20,11 @@ const handleNotifications = (req, res) => {
         req.on('data', chunk => {
             body += chunk.toString();
         });
-        req.on('end', () => {
+        req.on('end', async () => { // Made callback async
             const { user_id, message } = JSON.parse(body);
             if (user_id && message) {
                 const notification = new Notification(parseInt(user_id), message);
-                notification.save();
+                await notification.save(); // Added await
                 res.statusCode = 201;
                 res.end('Notification created');
             } else {
@@ -35,7 +35,7 @@ const handleNotifications = (req, res) => {
     } else if (method === 'PATCH') {
         const listingId = parsedUrl.searchParams.get('notification_id');
         if (listingId) {
-            const updatedNotification = Notification.markAsRead(parseInt(listingId));
+            const updatedNotification = await Notification.markAsRead(parseInt(listingId)); // Added await
             if (updatedNotification) {
                 res.statusCode = 200;
                 res.end('Notification marked as read');

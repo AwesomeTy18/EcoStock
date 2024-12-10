@@ -5,13 +5,13 @@ const utils = require('../utils.js');
 // Updated import for authentication middleware
 const { authenticateToken } = require('../utils.js');
 
-const handleCarts = (req, res, parsedUrl) => {
+const handleCarts = async (req, res, parsedUrl) => { // Added async
     const pathname = parsedUrl.pathname;
     const method = req.method.toUpperCase();
 
     if (method === 'GET') {
-        authenticateToken(req, res, () => {
-            const cart = Cart.findByUserId(req.user.user_id);
+        await authenticateToken(req, res, async () => { // Added await and async
+            const cart = await Cart.findByUserId(req.user.user_id); // Added await
             if (cart) {
                 const enhancedCart = {
                     user_id: cart.user_id,
@@ -26,12 +26,12 @@ const handleCarts = (req, res, parsedUrl) => {
         });
     }
     else if (method === 'POST') {
-        authenticateToken(req, res, () => {
+        await authenticateToken(req, res, async () => { // Added await and async
             let body = '';
             req.on('data', chunk => {
                 body += chunk.toString();
             });
-            req.on('end', () => {
+            req.on('end', async () => { // Made callback async
                 try {
                     const { photo_id, quantity } = JSON.parse(body);
 
@@ -41,14 +41,14 @@ const handleCarts = (req, res, parsedUrl) => {
                         return;
                     }
 
-                    const photo = Photo.findById(photo_id);
+                    const photo = await Photo.findById(photo_id); // Added await
                     if (photo) {
-                        let cart = Cart.findByUserId(req.user.user_id);
+                        let cart = await Cart.findByUserId(req.user.user_id); // Added await
                         if (!cart) {
                             cart = new Cart(req.user.user_id);
                         }
-                        cart.addItem(photo_id, quantity || 1);
-                        cart.save(); // Ensure cart is saved after modification
+                        await cart.addItem(photo_id, quantity || 1); // Added await
+                        await cart.save(); // Ensure cart is saved after modification
                         utils.sendJsonResponse(res, 201, { success: true, message: 'Item added to cart' });
                     } else {
                         utils.sendJsonResponse(res, 404, { success: false, message: 'Photo not found' });
@@ -60,14 +60,14 @@ const handleCarts = (req, res, parsedUrl) => {
         });
     }
     else if (method === 'DELETE') {
-        authenticateToken(req, res, () => {
+        await authenticateToken(req, res, async () => { // Added await and async
             const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
             const photoId = parseInt(parsedUrl.searchParams.get('photo_id'), 10);
             if (photoId) {
-                const cart = Cart.findByUserId(req.user.user_id);
+                const cart = await Cart.findByUserId(req.user.user_id); // Added await
                 if (cart) {
-                    cart.removeItem(photoId);
-                    cart.save(); // Ensure cart is saved after modification
+                    await cart.removeItem(photoId); // Added await
+                    await cart.save(); // Ensure cart is saved after modification
                     utils.sendJsonResponse(res, 200, { success: true, message: 'Item removed from cart' });
                 } else {
                     utils.sendJsonResponse(res, 404, { success: false, message: 'Cart not found' });

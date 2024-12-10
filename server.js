@@ -8,12 +8,12 @@ const { authenticateToken } = require('./utils.js'); // Import authenticateToken
 
 const PORT = process.env.PORT || 3000;
 
-const handleApiRoutes = (req, res, parsedUrl) => {
-    router(req, res, parsedUrl);
+const handleApiRoutes = async (req, res, parsedUrl) => {
+    await router(req, res, parsedUrl);
 };
 
 const serveHighResPhoto = (req, res, pathname) => {
-    authenticateToken(req, res, () => {
+    authenticateToken(req, res, async () => {
         const photoIdMatch = pathname.match(/highres(\d+)\.(\S+)/);
         const photoId = photoIdMatch ? parseInt(photoIdMatch[1], 10) : null;
 
@@ -21,6 +21,13 @@ const serveHighResPhoto = (req, res, pathname) => {
             res.statusCode = 400;
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ success: false, message: 'Photo ID is required' }));
+            return;
+        }
+
+        if (!req.user || req.user.user_id === undefined) {
+            res.statusCode = 401;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
             return;
         }
 
@@ -92,44 +99,50 @@ const serveStaticFile = (res, filePath) => {
     });
 };
 
-const server = http.createServer((req, res) => {
-    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
-    const pathname = parsedUrl.pathname;
+const server = http.createServer(async (req, res) => {
+    try {
+        const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+        const pathname = parsedUrl.pathname;
 
-    // Remove ".html" extension from the URL.
-    if (pathname.endsWith('.html')) {
+        // Remove ".html" extension from the URL.
+        if (pathname.endsWith('.html')) {
 
-        // Unless it's the index.html file.
-        if (pathname === '/index.html') {
+            // Unless it's the index.html file.
+            if (pathname === '/index.html') {
+                res.writeHead(301, {
+                    'Location': '/'
+                });
+                res.end();
+                return;
+            }
+
             res.writeHead(301, {
-                'Location': '/'
+                'Location': pathname.slice(0, -5)
             });
             res.end();
             return;
         }
 
-        res.writeHead(301, {
-            'Location': pathname.slice(0, -5)
-        });
-        res.end();
-        return;
-    }
-
-    if (pathname.startsWith('/api/')) {
-        handleApiRoutes(req, res, parsedUrl);
-    } else if (pathname.startsWith('/photos/highres')) {
-        serveHighResPhoto(req, res, pathname);
-    } else {
-        let filePath = path.join(__dirname, 'public', pathname);
-        if (pathname === '/') {
-            filePath = path.join(__dirname, 'public', 'index.html');
+        if (pathname.startsWith('/api/')) {
+            await handleApiRoutes(req, res, parsedUrl);
+        } else if (pathname.startsWith('/photos/highres')) {
+            await serveHighResPhoto(req, res, pathname);
+        } else {
+            let filePath = path.join(__dirname, 'public', pathname);
+            if (pathname === '/') {
+                filePath = path.join(__dirname, 'public', 'index.html');
+            }
+            else if (pathname.startsWith('/admin/')) {
+                filePath = path.join(__dirname, 'public', 'admin', `${pathname.substring(7)}.html`);
+            } else if (['/login', '/cart', '/my-pictures', '/details', '/register'].includes(pathname)) {
+                filePath = path.join(__dirname, 'public', `${pathname.substring(1)}.html`);
+            }
+            await serveStaticFile(res, filePath);
         }
-        else if (pathname.startsWith('/admin/')) {
-            filePath = path.join(__dirname, 'public', 'admin', `${pathname.substring(7)}.html`);
-        } else if (['/login', '/cart', '/my-pictures', '/details', '/register'].includes(pathname)) {
-            filePath = path.join(__dirname, 'public', `${pathname.substring(1)}.html`);
-        }
-        serveStaticFile(res, filePath);
+    } catch (error) {
+        res.statusCode = 500;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ success: false, message: 'Internal Server Error' }));
     }
 });
 
