@@ -1,0 +1,37 @@
+[
+  {
+    "listing_id": 701,
+    "photo_id": 101,
+    "price": 100,
+    "status": "Available",
+    "created_at": "2023-08-16T08:00:00Z"
+  },
+  {
+    "listing_id": 702,
+    "photo_id": 102,
+    "price": 200,
+    "status": "Available",
+    "created_at": "2023-07-11T09:30:00Z"
+  },
+  {
+    "listing_id": 703,
+    "photo_id": 103,
+    "price": 150,
+    "status": "Unavailable",
+    "created_at": "2023-06-21T10:15:00Z"
+  },
+  {
+    "listing_id": 704,
+    "photo_id": 104,
+    "price": 75,
+    "status": "Available",
+    "created_at": "2023-05-19T11:45:00Z"
+  },
+  {
+    "listing_id": 705,
+    "photo_id": 105,
+    "price": 125,
+    "status": "Available",
+    "created_at": "2023-10-06T12:00:00Z"
+  }
+]

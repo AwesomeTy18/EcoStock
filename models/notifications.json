@@ -1,0 +1,149 @@
+[
+  {
+    "notification_id": 601,
+    "user_id": 7,
+    "message": "Your purchase of \"Sunset Over Mountains\" was successful.",
+    "is_read": false,
+    "created_at": "2023-09-01T10:05:00Z"
+  },
+  {
+    "notification_id": 602,
+    "user_id": 8,
+    "message": "Your payout of $425.00 is pending.",
+    "is_read": false,
+    "created_at": "2023-09-15T09:05:00Z"
+  },
+  {
+    "notification_id": 1732005510221,
+    "user_id": 2,
+    "message": "Purchase successful for photo \"Calm Lake\"",
+    "is_read": false,
+    "created_at": "2024-11-19T08:38:30.221Z"
+  },
+  {
+    "notification_id": 1732005756286,
+    "user_id": 2,
+    "message": "Purchase successful for photo \"Sunset Over Mountains\"",
+    "is_read": false,
+    "created_at": "2024-11-19T08:42:36.286Z"
+  },
+  {
+    "notification_id": 1732010141696,
+    "user_id": 1,
+    "message": "Purchase successful for photo \"Sunset Over Mountains\"",
+    "is_read": false,
+    "created_at": "2024-11-19T09:55:41.696Z"
+  },
+  {
+    "notification_id": 1732016160575,
+    "user_id": 1,
+    "message": "Purchase successful for photo \"Calm Lake\"",
+    "is_read": false,
+    "created_at": "2024-11-19T11:36:00.575Z"
+  },
+  {
+    "notification_id": 1732016160578,
+    "user_id": 1,
+    "message": "Purchase successful for photo \"Autumn Leaves\"",
+    "is_read": false,
+    "created_at": "2024-11-19T11:36:00.578Z"
+  },
+  {
+    "notification_id": 1732016232267,
+    "user_id": 4,
+    "message": "Purchase successful for photo \"Desert Dunes\"",
+    "is_read": false,
+    "created_at": "2024-11-19T11:37:12.267Z"
+  },
+  {
+    "notification_id": 1732041501687,
+    "user_id": 1,
+    "message": "Purchase successful for photo \"Sunset Over Mountains\"",
+    "is_read": false,
+    "created_at": "2024-11-19T18:38:21.687Z"
+  },
+  {
+    "notification_id": 1732503166744,
+    "user_id": 2,
+    "message": "Purchase successful for photo \"Ocean Waves\"",
+    "is_read": false,
+    "created_at": "2024-11-25T02:52:46.744Z"
+  },
+  {
+    "notification_id": 1732503166746,
+    "user_id": 2,
+    "message": "Purchase successful for photo \"Sunset Over Mountains\"",
+    "is_read": false,
+    "created_at": "2024-11-25T02:52:46.746Z"
+  },
+  {
+    "notification_id": 1732503180434,
+    "user_id": 3,
+    "message": "Purchase successful for photo \"Calm Lake\"",
+    "is_read": false,
+    "created_at": "2024-11-25T02:53:00.434Z"
+  },
+  {
+    "notification_id": 1732503180437,
+    "user_id": 3,
+    "message": "Purchase successful for photo \"Desert Dunes\"",
+    "is_read": false,
+    "created_at": "2024-11-25T02:53:00.437Z"
+  },
+  {
+    "notification_id": 1732503180439,
+    "user_id": 3,
+    "message": "Purchase successful for photo \"Ocean Waves\"",
+    "is_read": false,
+    "created_at": "2024-11-25T02:53:00.439Z"
+  },
+  {
+    "notification_id": 1732503730034,
+    "user_id": 3,
+    "message": "Purchase successful for photo \"Ben and Jerry Share A Moment\"",
+    "is_read": false,
+    "created_at": "2024-11-25T03:02:10.034Z"
+  },
+  {
+    "notification_id": 1732510992257,
+    "user_id": 1,
+    "message": "Purchase successful for photo \"Ben and Jerry Share A Moment\"",
+    "is_read": false,
+    "created_at": "2024-11-25T05:03:12.257Z"
+  },
+  {
+    "notification_id": 1732579808271,
+    "user_id": 2,
+    "message": "Purchase successful for photo \"Sunset Over Mountains\"",
+    "is_read": false,
+    "created_at": "2024-11-26T00:10:08.271Z"
+  },
+  {
+    "notification_id": 1732580910259,
+    "user_id": 1,
+    "message": "Purchase successful for photo \"Sunset Over Mountains\"",
+    "is_read": false,
+    "created_at": "2024-11-26T00:28:30.259Z"
+  },
+  {
+    "notification_id": 1732582657952,
+    "user_id": 9,
+    "message": "Purchase successful for photo \"Sunset Over Mountains\"",
+    "is_read": false,
+    "created_at": "2024-11-26T00:57:37.952Z"
+  },
+  {
+    "notification_id": 1732585610997,
+    "user_id": 1,
+    "message": "Purchase successful for photo \"Jerry, & Ben Do Shit\"",
+    "is_read": false,
+    "created_at": "2024-11-26T01:46:50.997Z"
+  },
+  {
+    "notification_id": 1732585796664,
+    "user_id": 1,
+    "message": "Purchase successful for photo \"MC\"",
+    "is_read": false,
+    "created_at": "2024-11-26T01:49:56.664Z"
+  }
+]

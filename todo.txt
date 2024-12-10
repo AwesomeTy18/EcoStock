@@ -1,0 +1,13 @@
+customer reviews
+notifications
+paypal integration / checkout
+
+photographer accounts
+photographer dashboard
+photographer payouts
+photographer photo upload
+
+admin dashboard
+admins can approve/deny photographer uploads before they go to store
+
+mysql (sad)

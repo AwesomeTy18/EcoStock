@@ -1,0 +1,16 @@
+[
+  {
+    "payout_id": 401,
+    "photographer_id": 1,
+    "amount": 850,
+    "payout_date": "2023-09-15T09:00:00Z",
+    "status": "Completed"
+  },
+  {
+    "payout_id": 402,
+    "photographer_id": 2,
+    "amount": 425,
+    "payout_date": "2023-09-15T09:00:00Z",
+    "status": "Pending"
+  }
+]

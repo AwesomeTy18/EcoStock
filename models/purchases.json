@@ -1,0 +1,149 @@
+[
+  {
+    "purchase_id": 301,
+    "user_id": 7,
+    "photo_id": 101,
+    "purchase_date": "2023-09-01T10:00:00Z",
+    "receipt_url": "http://example.com/receipts/301.json"
+  },
+  {
+    "purchase_id": 302,
+    "user_id": 8,
+    "photo_id": 102,
+    "purchase_date": "2023-09-02T11:30:00Z",
+    "receipt_url": "http://example.com/receipts/302.json"
+  },
+  {
+    "purchase_id": 1732005510218,
+    "user_id": 2,
+    "photo_id": 102,
+    "purchase_date": "2024-11-19T08:38:30.218Z",
+    "receipt_url": "receipts/1732005510218.json"
+  },
+  {
+    "purchase_id": 1732005756285,
+    "user_id": 2,
+    "photo_id": 101,
+    "purchase_date": "2024-11-19T08:42:36.285Z",
+    "receipt_url": "receipts/1732005756285.json"
+  },
+  {
+    "purchase_id": 1732010141695,
+    "user_id": 1,
+    "photo_id": 101,
+    "purchase_date": "2024-11-19T09:55:41.695Z",
+    "receipt_url": "receipts/1732010141695.json"
+  },
+  {
+    "purchase_id": 1732016160574,
+    "user_id": 1,
+    "photo_id": 102,
+    "purchase_date": "2024-11-19T11:36:00.574Z",
+    "receipt_url": "receipts/1732016160574.json"
+  },
+  {
+    "purchase_id": 1732016160577,
+    "user_id": 1,
+    "photo_id": 105,
+    "purchase_date": "2024-11-19T11:36:00.577Z",
+    "receipt_url": "receipts/1732016160577.json"
+  },
+  {
+    "purchase_id": 1732016232266,
+    "user_id": 4,
+    "photo_id": 103,
+    "purchase_date": "2024-11-19T11:37:12.266Z",
+    "receipt_url": "receipts/1732016232266.json"
+  },
+  {
+    "purchase_id": 1732041501686,
+    "user_id": 1,
+    "photo_id": 101,
+    "purchase_date": "2024-11-19T18:38:21.686Z",
+    "receipt_url": "receipts/1732041501686.json"
+  },
+  {
+    "purchase_id": 1732503166741,
+    "user_id": 2,
+    "photo_id": 104,
+    "purchase_date": "2024-11-25T02:52:46.741Z",
+    "receipt_url": "receipts/1732503166741.json"
+  },
+  {
+    "purchase_id": 1732503166745,
+    "user_id": 2,
+    "photo_id": 101,
+    "purchase_date": "2024-11-25T02:52:46.745Z",
+    "receipt_url": "receipts/1732503166745.json"
+  },
+  {
+    "purchase_id": 1732503180433,
+    "user_id": 3,
+    "photo_id": 102,
+    "purchase_date": "2024-11-25T02:53:00.433Z",
+    "receipt_url": "receipts/1732503180433.json"
+  },
+  {
+    "purchase_id": 1732503180436,
+    "user_id": 3,
+    "photo_id": 103,
+    "purchase_date": "2024-11-25T02:53:00.436Z",
+    "receipt_url": "receipts/1732503180436.json"
+  },
+  {
+    "purchase_id": 1732503180438,
+    "user_id": 3,
+    "photo_id": 104,
+    "purchase_date": "2024-11-25T02:53:00.438Z",
+    "receipt_url": "receipts/1732503180438.json"
+  },
+  {
+    "purchase_id": 1732503730033,
+    "user_id": 3,
+    "photo_id": 106,
+    "purchase_date": "2024-11-25T03:02:10.033Z",
+    "receipt_url": "receipts/1732503730033.json"
+  },
+  {
+    "purchase_id": 1732510992254,
+    "user_id": 1,
+    "photo_id": 106,
+    "purchase_date": "2024-11-25T05:03:12.254Z",
+    "receipt_url": "receipts/1732510992254.json"
+  },
+  {
+    "purchase_id": 1732579808270,
+    "user_id": 2,
+    "photo_id": 101,
+    "purchase_date": "2024-11-26T00:10:08.270Z",
+    "receipt_url": "receipts/1732579808270.json"
+  },
+  {
+    "purchase_id": 1732580910258,
+    "user_id": 1,
+    "photo_id": 101,
+    "purchase_date": "2024-11-26T00:28:30.258Z",
+    "receipt_url": "receipts/1732580910258.json"
+  },
+  {
+    "purchase_id": 1732582657951,
+    "user_id": 9,
+    "photo_id": 101,
+    "purchase_date": "2024-11-26T00:57:37.951Z",
+    "receipt_url": "receipts/1732582657951.json"
+  },
+  {
+    "purchase_id": 1732585610996,
+    "user_id": 1,
+    "photo_id": 7924255627,
+    "purchase_date": "2024-11-26T01:46:50.996Z",
+    "receipt_url": "receipts/1732585610996.json"
+  },
+  {
+    "purchase_id": 1732585796663,
+    "user_id": 1,
+    "photo_id": 6821780730,
+    "purchase_date": "2024-11-26T01:49:56.663Z",
+    "receipt_url": "receipts/1732585796663.json"
+  }
+]

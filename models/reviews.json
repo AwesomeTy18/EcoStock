@@ -1,0 +1,18 @@
+[
+  {
+    "review_id": 501,
+    "user_id": 7,
+    "photo_id": 101,
+    "rating": 5,
+    "review_text": "Stunning view! Amazing colors.",
+    "created_at": "2023-09-05T14:20:00Z"
+  },
+  {
+    "review_id": 502,
+    "user_id": 8,
+    "photo_id": 102,
+    "rating": 4,
+    "review_text": "Very peaceful and calming.",
+    "created_at": "2023-09-06T16:45:00Z"
+  }
+]

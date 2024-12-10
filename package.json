@@ -1,0 +1,12 @@
+{
+  "name": "nodejs-server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "sharp": "^0.33.5"
+  }
+}

@@ -1,0 +1,591 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    visibility: hidden;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers all nav items horizontally */
+    position: relative;
+}
+
+/* Align "Login" and "User" info to the right */
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#auth-link,
+#user-info {
+    position: static;
+    margin-left: auto; /* Pushes these items to the far right */
+}
+
+#photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.photo-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    width: 300px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.photo-card img {
+    max-width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.photo-card h3 {
+    margin: 0 0 10px 0;
+}
+
+/* .photo-card p {
+    margin: 0 0 10px 0;
+} */
+
+.photo-card button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.photo-card button:hover {
+    background-color: #218838;
+}
+
+/* Style for the Details button */
+.photo-card button.details-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.photo-card button.details-button:hover {
+    background-color: #0056b3;
+}
+
+main {
+    flex: 1;
+}
+
+/* Footer styles */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    margin-top: auto; /* Pushes the footer to the bottom */
+}
+
+/* Add styles for the login section */
+#login-section {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#login-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#login-form label {
+    margin-bottom: 5px;
+}
+
+#login-form input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#login-form button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#login-form button:hover {
+    background-color: #0056b3;
+}
+
+#login-message {
+    text-align: center;
+    margin-top: 10px;
+    color: red;
+}
+
+/* Add styles for the cart section */
+.cart-item {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.cart-item img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+.cart-item h3 {
+    margin: 0 0 10px 0;
+}
+
+.cart-item p {
+    margin: 5px 0;
+}
+
+.cart-item button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.cart-item button:hover {
+    background-color: #c82333;
+}
+
+#checkout-button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#checkout-button:hover {
+    background-color: #218838;
+}
+
+#cart-message {
+    text-align: center;
+    margin-top: 10px;
+    color: green;
+}
+
+/* Add styles for the search section */
+#search-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#search-input {
+    width: 60%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#search-button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #17a2b8;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#search-button:hover {
+    background-color: #138496;
+}
+
+/* Dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+}
+
+/* Dropdown button */
+.dropbtn {
+    background-color: #4CAF50; /* Match primary color */
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.dropbtn:hover {
+    background-color: #45a049;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #555;
+}
+
+/* Adjust auth-link for alignment */
+#auth-link {
+    float: right;
+    margin-right: 20px;
+}
+
+/* Style for the photo details section */
+#photo-details-section {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#photo-details-section img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+#photo-details-section h3 {
+    margin-top: 15px;
+    font-size: 1.8em;
+}
+
+#photo-details-section p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+#photo-details-section button,
+#photo-details-section a {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#photo-details-section button:hover,
+#photo-details-section a:hover {
+    background-color: #218838;
+}
+
+#photo-details-section a {
+    background-color: #007bff;
+    margin-left: 10px;
+}
+
+#photo-details-section a:hover {
+    background-color: #0056b3;
+}
+
+/* Cart Section Styles */
+#cart-section {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+/* Cart Item Styles */
+.cart-item {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.cart-item img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+.cart-item span {
+    flex: 1;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.cart-item button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.cart-item button:hover {
+    background-color: #c82333;
+}
+
+/* Cart Total Styles */
+#cart-total {
+    text-align: right;
+    margin-top: 20px;
+}
+
+#cart-total h3 {
+    font-size: 20px;
+}
+
+/* Checkout Button Styles */
+#checkout-button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#checkout-button:hover {
+    background-color: #218838;
+}
+
+/* Cart Message Styles */
+#cart-message {
+    text-align: center;
+    margin-top: 10px;
+    color: green;
+}
+
+/* Add styles for the checkout form */
+#checkout-form {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+#checkout-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#checkout-form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#checkout-form button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#checkout-form button:hover {
+    background-color: #218838;
+}
+
+#my-pictures-section {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+#my-pictures {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.photo-card a {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.photo-card a:hover {
+    background-color: #0056b3;
+}
+
+.photo-card p {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+}
+
+/* Add styles for the download button */
+.photo-card a.download-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.photo-card a.download-button img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+.photo-card a.download-button:hover {
+    background-color: #0056b3;
+}
+
+/* Style for the price text within photo cards */
+.photo-card p strong {
+    color: #333;
+}
+
+.photo-card p:nth-of-type(3) { /* Assuming price is the third <p> element */
+    font-size: 1.1em;
+    margin-top: 5px;
+}
+
+/* Button styles */
+.btn {
+    background-color: #4CAF50; /* EcoStock's primary color */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+/* Download button styles */
+.download-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.download-button img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s;
+}
+
+.download-button:hover img {
+    transform: scale(1.1);
+}

@@ -1,0 +1,63 @@
+[
+  {
+    "cart_id": 201,
+    "user_id": 7,
+    "items": [
+      {
+        "photo_id": 101,
+        "quantity": 1
+      },
+      {
+        "photo_id": 102,
+        "quantity": 2
+      }
+    ],
+    "added_at": "2024-11-19T07:55:29.442Z"
+  },
+  {
+    "cart_id": 202,
+    "user_id": 8,
+    "items": [
+      {
+        "photo_id": 103,
+        "quantity": 1
+      }
+    ],
+    "added_at": "2024-11-19T07:55:29.442Z"
+  },
+  {
+    "cart_id": 1732003203842,
+    "user_id": 1,
+    "items": [],
+    "added_at": "2024-11-19T08:00:03.842Z"
+  },
+  {
+    "cart_id": 1732004721334,
+    "user_id": 2,
+    "items": [
+      {
+        "photo_id": 105,
+        "quantity": 1
+      }
+    ],
+    "added_at": "2024-11-19T08:25:21.334Z"
+  },
+  {
+    "cart_id": 1732016225568,
+    "user_id": 4,
+    "items": [],
+    "added_at": "2024-11-19T11:37:05.568Z"
+  },
+  {
+    "cart_id": 1732502962846,
+    "user_id": 3,
+    "items": [],
+    "added_at": "2024-11-25T02:49:22.846Z"
+  },
+  {
+    "cart_id": 1732582651004,
+    "user_id": 9,
+    "items": [],
+    "added_at": "2024-11-26T00:57:31.004Z"
+  }
+]

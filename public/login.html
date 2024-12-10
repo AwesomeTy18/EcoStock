@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EcoStock</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>EcoStock</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/cart" class="auth-required">Cart</a></li>
+                <li id="auth-link" class="unauthenticated"><a href="/login">Login</a></li>
+                <li id="user-info" class="dropdown auth-required" style="display: none;">
+                    <a href="#" class="dropbtn">User</a>
+                    <div class="dropdown-content">
+                        <a href="/my-pictures" id="view-pics">My Pictures</a>
+                        <a href="#" id="logout">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="login-section">
+            <h2>Login</h2>
+            <form id="login-form">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit" class="btn">Login</button>
+                <hr style="border: 0; height: 1px; background: #ccc; margin: 20px 0;" />
+                <a href="/register" class="btn">Register</a>
+            </form>
+            <p id="login-message"></p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 EcoStock</p>
+    </footer>
+    <script src="/app.js"></script>
+</body>
+</html>

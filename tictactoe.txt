@@ -1,0 +1,12 @@
+hello
+
+   x|       |  Z
+ -----------------
+    |   O    | Z
+-----------------
+    |       |  Z
+
+    (i won)
+
+
+(ESSENTIAL; DO NOT DELETE)
