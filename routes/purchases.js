@@ -4,37 +4,37 @@ const Photo = require('../models/Photo');
 const Notification = require('../models/Notification');
 const { authenticateToken } = require('../utils.js');
 
-const handlePurchases = (req, res) => {
+const handlePurchases = async (req, res) => { // Added async
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
     const method = req.method;
 
     if (method === 'POST') {
-        authenticateToken(req, res, () => {
+        await authenticateToken(req, res, async () => { // Added await and async
             let body = '';
             req.on('data', chunk => {
                 body += chunk.toString();
             });
-            req.on('end', () => {
+            req.on('end', async () => { // Made callback async
                 const { payment_details, promo_code } = JSON.parse(body);
-                const cart = Cart.findByUserId(req.user.user_id);
+                const cart = await Cart.findByUserId(req.user.user_id); // Added await
                 if (cart && cart.items.length > 0) {
                     const paymentSuccess = true;
 
                     if (paymentSuccess) {
-                        cart.items.forEach(item => {
-                            const photo = Photo.findById(item.photo_id);
+                        for (const item of cart.items) { // Changed to for...of for await
+                            const photo = await Photo.findById(item.photo_id); // Added await
                             const receiptUrl = `receipts/${Date.now()}.json`;
 
                             const purchase = new Purchase(req.user.user_id, item.photo_id, receiptUrl);
-                            purchase.save();
+                            await purchase.save(); // Added await
 
                             const notificationMessage = `Purchase successful for photo "${photo.title}"`;
 
                             const notification = new Notification(req.user.user_id, notificationMessage);
-                            notification.save();
-                        });
+                            await notification.save(); // Added await
+                        }
                         cart.items = [];
-                        cart.save();
+                        await cart.save(); // Added await
 
                         res.statusCode = 200;
                         res.setHeader('Content-Type', 'application/json');
@@ -52,8 +52,8 @@ const handlePurchases = (req, res) => {
             });
         });
     } else if (method === 'GET') {
-        authenticateToken(req, res, () => {
-            const purchases = Purchase.findByUserId(req.user.user_id);
+        await authenticateToken(req, res, async () => { // Added await and async
+            const purchases = await Purchase.findByUserId(req.user.user_id); // Added await
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify(purchases));

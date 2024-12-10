@@ -16,19 +16,19 @@ const checkAdmin = (req, res, next) => {
 };
 
 // Handle admin routes manually
-const handleAdmin = (req, res, parsedUrl) => {
+const handleAdmin = async (req, res, parsedUrl) => { // Added async
     const pathname = parsedUrl.pathname;
     const method = req.method.toUpperCase();
 
     if (pathname === '/api/admin/upload' && method === 'POST') {
-        authenticateToken(req, res, () => {
-            checkAdmin(req, res, () => {
+        await authenticateToken(req, res, async () => { // Added await and async
+            await checkAdmin(req, res, async () => { // Added await and async
                 let data = [];
                 req.on('data', chunk => {
                     data.push(chunk);
                 });
 
-                req.on('end', () => {
+                req.on('end', async () => { // Made callback async
                     const buffer = Buffer.concat(data);
                     const contentType = req.headers['content-type'] || '';
                     const boundary = contentType.split('boundary=')[1];
@@ -44,8 +44,8 @@ const handleAdmin = (req, res, parsedUrl) => {
                     let fileData = null;
                     let filename = '';
 
-                    parts.forEach(part => {
-                        if (part.length === 0 || part.equals(Buffer.from('--\r\n'))) return;
+                    for (const part of parts) { // Changed to for...of for async compatibility
+                        if (part.length === 0 || part.equals(Buffer.from('--\r\n'))) continue;
 
                         const [header, body] = splitBuffer(part, Buffer.from('\r\n\r\n'));
                         const headers = parseHeaders(header.toString());
@@ -70,7 +70,7 @@ const handleAdmin = (req, res, parsedUrl) => {
                                 fields[fieldName] = isNaN(value) ? value : Number(value);
                             }
                         }
-                    });
+                    }
 
                     const { title, description, price } = fields;
 
@@ -91,17 +91,17 @@ const handleAdmin = (req, res, parsedUrl) => {
                         created_at: new Date().toISOString()
                     };
 
-                    Photo.create(newPhoto.photo_id, newPhoto.title, newPhoto.description, newPhoto.price, newPhoto.watermark_url, newPhoto.high_res_url, newPhoto.photographer_id);
+                    await Photo.create(newPhoto.photo_id, newPhoto.title, newPhoto.description, newPhoto.price, newPhoto.watermark_url, newPhoto.high_res_url, newPhoto.photographer_id); // Added await
                     
                     // Run processImages
-                    processImages();
+                    await processImages(); // Added await
 
                     utils.sendJsonResponse(res, 201, { success: true, message: 'Image uploaded and processed.' });
                 });
 
-                req.on('error', (err) => {
+                req.on('error', async (err) => { // Made callback async
                     console.log(err);
-                    utils.sendJsonResponse(res, 500, { success: false, message: 'Server error.' });
+                    await utils.sendJsonResponse(res, 500, { success: false, message: 'Server error.' }); // Added await
                 });
             });
         });

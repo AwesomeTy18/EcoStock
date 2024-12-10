@@ -11,7 +11,7 @@ const fs = require('fs');
  * @param {http.ServerResponse} res 
  * @param {URL} parsedUrl 
  */
-const handlePhotos = (req, res, parsedUrl, session) => {
+const handlePhotos = async (req, res, parsedUrl, session) => { // Added async
     console.log('handlePhotos called');
     const pathname = parsedUrl.pathname;
     const method = req.method.toUpperCase();
@@ -22,7 +22,7 @@ const handlePhotos = (req, res, parsedUrl, session) => {
             const photoId = parseInt(parsedUrl.searchParams.get('photo_id'), 10);
             console.log('Requested photo ID:', photoId);
             if (photoId) {
-                const photo = Photo.findById(photoId);
+                const photo = await Photo.findById(photoId); // Added await
                 if (photo) {
                     console.log('Photo found:', photo);
                     utils.sendJsonResponse(res, 200, photo);
@@ -38,8 +38,8 @@ const handlePhotos = (req, res, parsedUrl, session) => {
             // Handle /api/photos route
             console.log('Handling /api/photos');
             const searchQuery = parsedUrl.searchParams.get('search') || '';
-            let photos = Photo.findAll(); // Assume a method to get all photos
-
+            let photos = await Photo.findAll(); // Added await
+            
             if (searchQuery) {
                 const lowerCaseQuery = searchQuery.toLowerCase();
                 photos = photos.filter(photo =>
@@ -49,7 +49,7 @@ const handlePhotos = (req, res, parsedUrl, session) => {
                 );
             }
 
-            // Enhance photos with price from Photo model (photos.json)
+            // Enhance photos with price from Photo model
             const enhancedPhotos = photos.map(photo => {
                 return {
                     ...photo,
@@ -59,10 +59,10 @@ const handlePhotos = (req, res, parsedUrl, session) => {
 
             utils.sendJsonResponse(res, 200, enhancedPhotos);
         } else if (pathname === '/photos/highres') {
-            authenticateToken(req, res, () => {
+            await authenticateToken(req, res, async () => { // Added await and async
                 const photoId = parseInt(parsedUrl.searchParams.get('photo_id'), 10);
                 if (photoId) {
-                    const photo = Photo.findById(photoId);
+                    const photo = await Photo.findById(photoId); // Added await
                     if (photo) {
                         // Serve the high-resolution photo
                         // ...existing code to serve photo...
