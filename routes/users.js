@@ -62,6 +62,27 @@ const handleUsers = (req, res, parsedUrl) => {
                     utils.sendJsonResponse(res, 404, { success: false, message: 'User not found' });
                 }
             });
+        } else if (pathname === '/api/users/check-auth') {
+            const token = utils.extractToken(req);
+            let isAuthenticated = false;
+
+            if (token && utils.verifyToken(token)) {
+                isAuthenticated = true;
+            }
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ isAuthenticated }));
+        }
+        // Endpoint to get user details by user_id
+        else if (method === 'GET' && /^\/api\/users\/\d+$/.test(pathname)) {
+            const userId = parseInt(pathname.split('/').pop(), 10);
+            const user = User.findById(userId); // Implement findById in User model
+
+            if (user) {
+                utils.sendJsonResponse(res, 200, user);
+            } else {
+                utils.sendJsonResponse(res, 404, { success: false, message: 'User not found' });
+            }
         }
         // Handle other GET routes
     }

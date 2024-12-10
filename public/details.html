@@ -21,6 +21,7 @@
                     <a href="#" class="dropbtn">User</a>
                     <div class="dropdown-content">
                         <a href="/my-pictures" id="view-pics">My Pictures</a>
+                        <a href="/my-reviews" id="view-reviews">My Reviews</a>
                         <a href="#" id="logout">Logout</a>
                     </div>
                 </li>
@@ -35,6 +36,17 @@
                 <!-- Updated buttons with .btn class -->
                 <button class="btn" onclick="addToCart(photoId)">Add to Cart</button>
                 <a href="highres_photo_url" target="_blank" class="btn">View High-Resolution Image</a>
+            </div>
+
+            <!-- Reviews Section -->
+            <h3>Reviews</h3>
+            <div id="reviews">
+                <!-- Reviews will be dynamically loaded here -->
+            </div>
+
+            <!-- Review Submission Section -->
+            <div id="review-submission">
+                <!-- The review form or login prompt will be inserted here -->
             </div>
         </section>
     </main>

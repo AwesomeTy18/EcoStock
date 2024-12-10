@@ -53,6 +53,12 @@ class User {
 
         return new User(newUser.user_id, newUser.name, newUser.email, newUser.password_hash, newUser.roles);
     }
+
+    save() {
+        const users = JSON.parse(fs.readFileSync(path.join(__dirname, 'users.json'), 'utf8'));
+        users.push(this);
+        fs.writeFileSync(path.join(__dirname, 'users.json'), JSON.stringify(users, null, 2));
+    }
 }
 
 module.exports = User;

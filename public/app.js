@@ -150,17 +150,24 @@ function loadPhotos(searchQuery = '') {
             const photoGallery = document.getElementById('photo-gallery');
             photoGallery.innerHTML = '';
             photos.forEach(photo => {
-                const photoCard = document.createElement('div');
-                photoCard.classList.add('photo-card');
-                photoCard.innerHTML = `
-                    <img src="${photo.watermark_url}" alt="${photo.title}">
-                    <h3>${photo.title}</h3>
-                    <p>${photo.description}</p>
-                    <p><strong>Price:</strong> $${photo.price.toFixed(2)}</p>
-                    ${isAuthenticated ? `<button class="btn" onclick="addToCart(${photo.photo_id})">Add to Cart</button>` : ''}
-                    <button class="btn" onclick="viewDetails(${photo.photo_id})">Details</button>
-                `;
-                photoGallery.appendChild(photoCard);
+                // Fetch average rating for each photo
+                fetch(`/api/reviews/average?photo_id=${photo.photo_id}`)
+                    .then(response => response.json())
+                    .then(avgRating => {
+                        const photoCard = document.createElement('div');
+                        photoCard.classList.add('photo-card');
+                        photoCard.innerHTML = `
+                            <img src="${photo.watermark_url}" alt="${photo.title}">
+                            <h3>${photo.title}</h3>
+                            <p>${photo.description}</p>
+                            <p><strong>Price:</strong> $${photo.price.toFixed(2)}</p>
+                            <p><strong>Rating:</strong> ${avgRating.toFixed(1)} / 5</p>
+                            ${isAuthenticated ? `<button class="btn" onclick="addToCart(${photo.photo_id})">Add to Cart</button>` : ''}
+                            <button class="btn" onclick="viewDetails(${photo.photo_id})">Details</button>
+                        `;
+                        photoGallery.appendChild(photoCard);
+                    })
+                    .catch(error => console.error('Error fetching average rating:', error));
             });
         })
         .catch(error => console.error('Error loading photos:', error));
@@ -255,33 +262,76 @@ function updateUIBasedOnAuth() {
 
 // Function to load and display photo details on details
 function loadPhotoDetails() {
-    const parsedUrl = new URL(window.location.href);
-    const photoId = parsedUrl.searchParams.get('photo_id');
+    const urlParams = new URLSearchParams(window.location.search);
+    const photoId = urlParams.get('photo_id');
 
     if (photoId) {
         fetch(`/api/photos/details?photo_id=${photoId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(photo => {
-                console.log('Received photo details:', photo); // **Debugging Log**
                 const photoDetailsDiv = document.getElementById('photo-details');
-                if (photo && photo.photo_id) {
-                    const highResUrl = `${photo.high_res_url}?photo_id=${photo.photo_id}`;
-                    const highResLink = `<a href="${highResUrl}" target="_blank" class="btn">View High-Resolution Image</a>`;
+                if (photo) {
+                    // Display photo details
                     photoDetailsDiv.innerHTML = `
-                        <img src="${photo.watermark_url}" alt="${photo.title}" style="max-width: 100%;">
+                        <img src="${photo.watermark_url}" alt="${photo.title}">
                         <h3>${photo.title}</h3>
                         <p>${photo.description}</p>
-                        <p><strong>Price:</strong> ${typeof photo.price === 'number' ? '$' + photo.price.toFixed(2) : photo.price}</p>
+                        <p><strong>Price:</strong> $${photo.price.toFixed(2)}</p>
                         <p><strong>Location:</strong> ${photo.location}</p>
                         <p><strong>Date Taken:</strong> ${new Date(photo.date_taken).toLocaleDateString()}</p>
                         ${isAuthenticated ? `<button class="btn" onclick="addToCart(${photo.photo_id})">Add to Cart</button>` : ''}
-                        ${isAuthenticated ? highResLink : '' }
                     `;
+
+                    // Conditionally display review form or login prompt
+                    const reviewSubmissionDiv = document.getElementById('review-submission');
+                    if (isAuthenticated) {
+                        reviewSubmissionDiv.innerHTML = `
+                            <h4>Leave a Review</h4>
+                            <form id="review-form">
+                                <label for="rating">Rating (1-5):</label>
+                                <input type="number" id="rating" name="rating" min="1" max="5" required>
+                                <label for="review-text">Review:</label>
+                                <textarea id="review-text" name="review-text" required></textarea>
+                                <button type="submit" class="btn">Submit Review</button>
+                            </form>
+                        `;
+
+                        // Handle review submission
+                        const reviewForm = document.getElementById('review-form');
+                        reviewForm.addEventListener('submit', (e) => {
+                            e.preventDefault();
+                            const rating = document.getElementById('rating').value;
+                            const reviewText = document.getElementById('review-text').value.trim();
+
+                            fetch('/api/reviews', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    photo_id: photoId,
+                                    rating: Number(rating),
+                                    review_text: reviewText
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Reload reviews after successful submission
+                                    loadReviews(photoId);
+                                    reviewForm.reset();
+                                } else {
+                                    alert('Failed to submit review.');
+                                }
+                            })
+                            .catch(error => console.error('Error submitting review:', error));
+                        });
+                    } else {
+                        reviewSubmissionDiv.innerHTML = '<p>Please <a href="/login">login</a> to leave a review.</p>';
+                    }
+
+                    // Load and display reviews
+                    loadReviews(photoId);
                 } else {
                     photoDetailsDiv.innerHTML = '<p>Photo not found.</p>';
                 }
@@ -292,9 +342,49 @@ function loadPhotoDetails() {
                 photoDetailsDiv.innerHTML = '<p>Unable to load photo details. Please try again later.</p>';
             });
     } else {
-        const photoDetailsDiv = document.getElementById('photo-details');
+        const photoDetailsDiv = document.getElementId('photo-details');
         photoDetailsDiv.innerHTML = '<p>No photo selected.</p>';
     }
+}
+
+function loadReviews(photoId) {
+    fetch(`/api/reviews?photo_id=${photoId}`)
+        .then(response => response.json())
+        .then(reviews => {
+            const reviewsDiv = document.getElementById('reviews');
+            reviewsDiv.innerHTML = '';
+
+            // Extract unique user_ids to minimize API calls
+            const userIds = [...new Set(reviews.map(review => review.user_id))];
+
+            // Fetch user data for all unique user_ids
+            const userPromises = userIds.map(userId => 
+                fetch(`/api/users/${userId}`).then(res => res.json())
+            );
+
+            Promise.all(userPromises)
+                .then(users => {
+                    // Create a mapping of user_id to user_name
+                    const userMap = {};
+                    users.forEach(user => {
+                        userMap[user.user_id] = user.name;
+                    });
+
+                    // Display each review with username
+                    reviews.forEach(review => {
+                        const reviewItem = document.createElement('div');
+                        reviewItem.classList.add('review-item');
+                        reviewItem.innerHTML = `
+                            <p><strong>Rating:</strong> ${review.rating} / 5</p>
+                            <p>${review.review_text}</p>
+                            <p><em>Reviewed on ${new Date(review.created_at).toLocaleDateString()} by ${userMap[review.user_id] || 'Unknown'}</em></p>
+                        `;
+                        reviewsDiv.appendChild(reviewItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching user data:', error));
+        })
+        .catch(error => console.error('Error fetching reviews:', error));
 }
 
 // Call loadPhotoDetails if on details
@@ -460,7 +550,280 @@ function loadPurchasedPhotos() {
     }
 }
 
+// Function to delete a review
+function deleteReview(reviewId) {
+    if (confirm('Are you sure you want to delete this review?')) {
+        fetch('/api/reviews', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ review_id: reviewId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Review deleted successfully.');
+                loadUserReviews();
+            } else {
+                alert('Failed to delete review.');
+            }
+        })
+        .catch(error => console.error('Error deleting review:', error));
+    }
+}
+
+// Function to update a review
+function updateReview(reviewId) {
+    const newRating = prompt('Enter new rating (1-5):');
+    const newReviewText = prompt('Enter new review text:');
+
+    if (newRating && newReviewText) {
+        fetch('/api/reviews', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                review_id: reviewId,
+                rating: Number(newRating),
+                review_text: newReviewText
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Review updated successfully.');
+                loadUserReviews();
+            } else {
+                alert('Failed to update review.');
+            }
+        })
+        .catch(error => console.error('Error updating review:', error));
+    } else {
+        alert('Rating and review text are required.');
+    }
+}
+
+// Update the loadUserReviews function to include Edit and Delete buttons
+function loadUserReviews() {
+    fetch('/api/reviews/user')
+        .then(response => response.json())
+        .then(reviews => {
+            const myReviewsDiv = document.getElementById('my-pictures');
+            myReviewsDiv.innerHTML = '';
+            reviews.forEach(review => {
+                fetch(`/api/photos/details?photo_id=${review.photo_id}`)
+                    .then(response => response.json())
+                    .then(photo => {
+                        const reviewDiv = document.createElement('div');
+                        reviewDiv.classList.add('review-card'); // Ensure the class is added
+                        reviewDiv.innerHTML = `
+                            <div class="review-header">
+                                <img src="${photo.watermark_url}" alt="${photo.title}">
+                                <h4>${photo.title}</h4>
+                                <span class="review-rating">${review.rating} / 5</span>
+                            </div>
+                            <p class="review-text">${review.review_text}</p>
+                            <button class="btn" onclick='openEditReviewModal(${JSON.stringify(review)})'>Edit</button>
+                            <button class="btn btn-danger" onclick='openDeleteReviewModal(${review.review_id})'>Delete</button>
+                        `;
+                        myReviewsDiv.appendChild(reviewDiv);
+                    })
+                    .catch(error => console.error('Error fetching photo details:', error));
+            });
+        })
+        .catch(error => console.error('Error fetching reviews:', error));
+}
+
 // Call loadPurchasedPhotos if on 'My Pictures' page
 if (window.location.pathname === '/my-pictures') {
     document.addEventListener('DOMContentLoaded', loadPurchasedPhotos);
+}
+if (window.location.pathname === '/my-reviews') {
+    document.addEventListener('DOMContentLoaded', loadUserReviews);
+}
+
+// Function to open the edit review modal with pre-filled data
+function openEditReviewModal(review) {
+    document.getElementById('edit-review-id').value = review.review_id;
+    document.getElementById('edit-rating').value = review.rating;
+    document.getElementById('edit-review-text').value = review.review_text;
+    document.getElementById('edit-review-modal').style.display = 'block';
+}
+
+// Function to close the edit review modal
+function closeEditReviewModal() {
+    document.getElementById('edit-review-modal').style.display = 'none';
+}
+
+// Handle edit review form submission
+document.getElementById('edit-review-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const reviewId = document.getElementById('edit-review-id').value;
+    const newRating = document.getElementById('edit-rating').value;
+    const newReviewText = document.getElementById('edit-review-text').value.trim();
+
+    // Validation
+    if (newRating < 1 || newRating > 5) {
+        alert('Rating must be between 1 and 5.');
+        return;
+    }
+
+    if (!newReviewText) {
+        alert('Review text cannot be empty.');
+        return;
+    }
+
+    // Send PUT request to update the review
+    fetch('/api/reviews', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            review_id: reviewId,
+            rating: Number(newRating),
+            review_text: newReviewText
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Review updated successfully.');
+            closeEditReviewModal();
+            loadUserReviews();
+        } else {
+            alert('Failed to update review.');
+        }
+    })
+    .catch(error => console.error('Error updating review:', error));
+});
+
+// Update the loadUserReviews function to use the new openEditReviewModal function
+function loadUserReviews() {
+    fetch('/api/reviews/user')
+        .then(response => response.json())
+        .then(reviews => {
+            const myReviewsDiv = document.getElementById('my-pictures');
+            myReviewsDiv.innerHTML = '';
+            reviews.forEach(review => {
+                fetch(`/api/photos/details?photo_id=${review.photo_id}`)
+                    .then(response => response.json())
+                    .then(photo => {
+                        const reviewDiv = document.createElement('div');
+                        reviewDiv.classList.add('review-card');
+                        reviewDiv.innerHTML = `
+                            <img src="${photo.watermark_url}" alt="${photo.title}">
+                            <h3>${photo.title}</h3>
+                            <p><strong>Rating:</strong> ${review.rating} / 5</p>
+                            <p>${review.review_text}</p>
+                            <button class="btn" onclick='openEditReviewModal(${JSON.stringify(review)})'>Edit</button>
+                            <button class="btn" onclick="deleteReview(${review.review_id})">Delete</button>
+                        `;
+                        myReviewsDiv.appendChild(reviewDiv);
+                    })
+                    .catch(error => console.error('Error fetching photo details:', error));
+            });
+        })
+        .catch(error => console.error('Error fetching reviews:', error));
+}
+
+// Close the modal when clicking outside of the modal content
+window.onclick = function(event) {
+    const modal = document.getElementById('edit-review-modal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Function to open the delete review modal with the specific review ID
+function openDeleteReviewModal(reviewId) {
+    document.getElementById('delete-review-id').value = reviewId;
+    document.getElementById('delete-review-modal').style.display = 'block';
+}
+
+// Function to close the delete review modal
+function closeDeleteReviewModal() {
+    document.getElementById('delete-review-modal').style.display = 'none';
+}
+
+// Handle delete review form submission
+document.getElementById('delete-review-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const reviewId = document.getElementById('delete-review-id').value;
+
+    // Send DELETE request to remove the review
+    fetch('/api/reviews', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ review_id: parseInt(reviewId) })
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            return response.text().then(text => { throw new Error(text) });
+        }
+    })
+    .then(data => {
+        if (data.success) {
+            alert('Review deleted successfully.');
+            closeDeleteReviewModal();
+            loadUserReviews();
+        } else {
+            alert('Failed to delete review: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting review:', error);
+        alert('An error occurred while deleting the review.');
+    });
+});
+
+// Update the loadUserReviews function to include the new openDeleteReviewModal function
+function loadUserReviews() {
+    fetch('/api/reviews/user')
+        .then(response => response.json())
+        .then(reviews => {
+            const myReviewsDiv = document.getElementById('my-pictures');
+            myReviewsDiv.innerHTML = '';
+            reviews.forEach(review => {
+                fetch(`/api/photos/details?photo_id=${review.photo_id}`)
+                    .then(response => response.json())
+                    .then(photo => {
+                        const reviewDiv = document.createElement('div');
+                        reviewDiv.classList.add('review-card'); // Ensure the class is added
+                        reviewDiv.innerHTML = `
+                            <div class="review-header">
+                                <img src="${photo.watermark_url}" alt="${photo.title}">
+                                <h4>${photo.title}</h4>
+                                <span class="review-rating">${review.rating} / 5</span>
+                            </div>
+                            <p class="review-text">${review.review_text}</p>
+                            <button class="btn" onclick='openEditReviewModal(${JSON.stringify(review)})'>Edit</button>
+                            <button class="btn btn-danger" onclick='openDeleteReviewModal(${review.review_id})'>Delete</button>
+                        `;
+                        myReviewsDiv.appendChild(reviewDiv);
+                    })
+                    .catch(error => console.error('Error fetching photo details:', error));
+            });
+        })
+        .catch(error => console.error('Error fetching reviews:', error));
+}
+
+// Close the modals when clicking outside of the modal content
+window.onclick = function(event) {
+    const editModal = document.getElementById('edit-review-modal');
+    const deleteModal = document.getElementById('delete-review-modal');
+    if (event.target == editModal) {
+        editModal.style.display = 'none';
+    }
+    if (event.target == deleteModal) {
+        deleteModal.style.display = 'none';
+    }
 }
