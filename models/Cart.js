@@ -53,6 +53,15 @@ class Cart {
                     else resolve();
                 });
             });
+            if (this.items.length === 0) {
+                const deleteSql = 'DELETE FROM cart_items WHERE cart_id = ?';
+                await new Promise((resolve, reject) => {
+                    db.run(deleteSql, [this.cart_id], function(err) {
+                        if (err) reject(err);
+                        else resolve();
+                    });
+                });
+            }
         } catch (err) {
             throw err;
         }

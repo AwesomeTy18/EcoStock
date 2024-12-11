@@ -31,7 +31,7 @@ const serveHighResPhoto = (req, res, pathname) => {
             return;
         }
 
-        const purchase = Purchase.findByUserId(req.user.user_id).find(p => p.photo_id === photoId);
+        const purchase = (await Purchase.findByUserId(req.user.user_id)).find(p => p.photo_id === photoId);
         if (!purchase) {
             res.statusCode = 403;
             res.setHeader('Content-Type', 'application/json');

@@ -25,7 +25,7 @@ const handlePurchases = async (req, res) => { // Added async
                             const photo = await Photo.findById(item.photo_id); // Added await
                             const receiptUrl = `receipts/${Date.now()}.json`;
 
-                            const purchase = new Purchase(req.user.user_id, item.photo_id, receiptUrl);
+                            const purchase = new Purchase(null, req.user.user_id, item.photo_id, receiptUrl, new Date());
                             await purchase.save(); // Added await
 
                             const notificationMessage = `Purchase successful for photo "${photo.title}"`;
