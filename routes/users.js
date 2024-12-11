@@ -14,7 +14,7 @@ const { generateToken, serializeCookie, authenticateToken } = require('../utils.
  * @param {http.ServerResponse} res 
  * @param {URL} parsedUrl 
  */
-const handleUsers = (req, res, parsedUrl) => {
+const handleUsers = async (req, res, parsedUrl) => {
     const pathname = parsedUrl.pathname;
     const method = req.method.toUpperCase();
 
@@ -25,7 +25,7 @@ const handleUsers = (req, res, parsedUrl) => {
             req.on('data', chunk => {
                 body += chunk.toString();
             });
-            req.on('end', () => {
+            req.on('end', async () => {
                 console.log('Received login request body:', body); // **Debugging Log**
 
                 try {
@@ -33,7 +33,7 @@ const handleUsers = (req, res, parsedUrl) => {
                     console.log('Parsed email:', email); // **Debugging Log**
                     console.log('Parsed password:', password); // **Debugging Log**
 
-                    const user = User.authenticate(email, password);
+                    const user = await User.authenticate(email, password);
                     if (user) {
                         const token = generateToken({ user_id: user.user_id, name: user.name, roles: user.roles });
                         res.setHeader('Set-Cookie', serializeCookie('token', token, { httpOnly: false, secure: true, path: '/' }));

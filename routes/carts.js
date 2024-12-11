@@ -10,7 +10,7 @@ const handleCarts = async (req, res, parsedUrl) => { // Added async
     const method = req.method.toUpperCase();
 
     if (method === 'GET') {
-        await authenticateToken(req, res, async () => { // Added await and async
+        authenticateToken(req, res, async () => { // Added await and async
             const cart = await Cart.findByUserId(req.user.user_id); // Added await
             if (cart) {
                 const enhancedCart = {
@@ -26,7 +26,7 @@ const handleCarts = async (req, res, parsedUrl) => { // Added async
         });
     }
     else if (method === 'POST') {
-        await authenticateToken(req, res, async () => { // Added await and async
+        authenticateToken(req, res, async () => { // Added await and async
             let body = '';
             req.on('data', chunk => {
                 body += chunk.toString();
@@ -45,10 +45,11 @@ const handleCarts = async (req, res, parsedUrl) => { // Added async
                     if (photo) {
                         let cart = await Cart.findByUserId(req.user.user_id); // Added await
                         if (!cart) {
-                            cart = new Cart(req.user.user_id);
+                            cart = await Cart.create(req.user.user_id);
                         }
                         await cart.addItem(photo_id, quantity || 1); // Added await
                         await cart.save(); // Ensure cart is saved after modification
+
                         utils.sendJsonResponse(res, 201, { success: true, message: 'Item added to cart' });
                     } else {
                         utils.sendJsonResponse(res, 404, { success: false, message: 'Photo not found' });

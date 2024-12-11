@@ -12,6 +12,7 @@ class Cart {
     async addItem(photo_id, quantity = 1) {
         try {
             await CartItem.addItem(this.cart_id, photo_id, quantity);
+            this.items.push({ photo_id, quantity });
         } catch (err) {
             throw err;
         }
@@ -20,6 +21,22 @@ class Cart {
     async removeItem(photo_id) {
         try {
             await CartItem.removeItem(this.cart_id, photo_id);
+            this.items = this.items.filter(item => item.photo_id !== photo_id);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async create(user_id) {
+        const sql = 'INSERT INTO carts (user_id, added_at) VALUES (?, ?)';
+        try {
+            const result = await new Promise((resolve, reject) => {
+                db.run(sql, [user_id, new Date().toISOString()], function(err) {
+                    if (err) reject(err);
+                    else resolve(new Cart(this.lastID, user_id, new Date().toISOString()));
+                });
+            });
+            return result.lastID;
         } catch (err) {
             throw err;
         }

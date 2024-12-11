@@ -16,64 +16,43 @@ const PhotoListing = require('../models/PhotoListing.js');
 const db = require('../db.js'); // Ensure db.js initializes tables before seeding
 
 // Populate all data using seed methods
-const populateData = () => {
-    User.seed((err) => {
-        if (err) {
-            console.error('Error seeding users:', err);
-        } else {
-            console.log('Users seeded successfully.');
-            Photo.seed((err) => {
-                if (err) {
-                    console.error('Error seeding photos:', err);
-                } else {
-                    console.log('Photos seeded successfully.');
-                    Cart.seed((err) => { // Updated to use Cart.seed
-                        if (err) {
-                            console.error('Error seeding carts:', err);
-                        } else {
-                            console.log('Carts seeded successfully.');
-                            Purchase.seed((err) => {
-                                if (err) {
-                                    console.error('Error seeding purchases:', err);
-                                } else {
-                                    console.log('Purchases seeded successfully.');
-                                    Payout.seed((err) => {
-                                        if (err) {
-                                            console.error('Error seeding payouts:', err);
-                                        } else {
-                                            console.log('Payouts seeded successfully.');
-                                            Review.seed((err) => {
-                                                if (err) {
-                                                    console.error('Error seeding reviews:', err);
-                                                } else {
-                                                    console.log('Reviews seeded successfully.');
-                                                    Notification.seed((err) => {
-                                                        if (err) {
-                                                            console.error('Error seeding notifications:', err);
-                                                        } else {
-                                                            console.log('Notifications seeded successfully.');
-                                                            PhotoListing.seed((err) => {
-                                                                if (err) {
-                                                                    console.error('Error seeding listings:', err);
-                                                                } else {
-                                                                    console.log('Listings seeded successfully.');
-                                                                    console.log('Sample data population completed successfully.');
-                                                                }
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    });
+const populateData = async () => {
+    try {
+        await User.seed();
+        console.log('Users seeded successfully.');
+
+        await Photo.seed();
+        console.log('Photos seeded successfully.');
+
+        await Cart.seed();
+        console.log('Carts seeded successfully.');
+
+        await Purchase.seed();
+        console.log('Purchases seeded successfully.');
+
+        await Payout.seed();
+        console.log('Payouts seeded successfully.');
+
+        await Review.seed();
+        console.log('Reviews seeded successfully.');
+
+        await Notification.seed();
+        console.log('Notifications seeded successfully.');
+
+        await PhotoListing.seed();
+        console.log('Listings seeded successfully.');
+
+        console.log('Sample data population completed successfully.');
+    } catch (err) {
+        console.error('Error seeding data:', err);
+    }
 };
 
-populateData();
+// Perform a fake function on the DB.
+db.get("SELECT 1", (err, row) => {
+    if (err) {
+        console.error('Error connecting to the database:', err);
+    } else {
+        populateData();
+    }
+});
