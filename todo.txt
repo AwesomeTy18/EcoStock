@@ -10,4 +10,4 @@ photographer photo upload
 admin dashboard
 admins can approve/deny photographer uploads before they go to store
 
-mysql (sad) (sad)u
+mysql (sad) (sad) (almost done)
