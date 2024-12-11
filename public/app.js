@@ -64,7 +64,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.success) {
                     message.style.color = 'green';
                     message.textContent = 'Registration successful. Please log in.';
-                    window.location.href = '/login';
+                    // window.location.href = '/login';
+                    console.log('Sending login request with:', { email, password }); // **Debugging Log**
+
+                    fetch('/api/users/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password }) // Ensure 'email' and 'password' are correctly captured
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '/';
+                        } else {
+                            message.style.color = 'red';
+                            message.textContent = data.message;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error during login:', error);
+                        message.style.color = 'red';
+                        message.textContent = 'Registration successful. An error occurred during login.'; // Update message
+                    });
+        
                 } else {
                     message.style.color = 'red';
                     message.textContent = data.message;
@@ -367,7 +391,6 @@ function loadReviews(photoId) {
                     // Create a mapping of user_id to user_name
                     const userMap = {};
                     users.forEach(user => {
-                        console.log(user); // **Debugging Log**
                         userMap[user.user_id] = user.name;
                     });
 
