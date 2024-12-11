@@ -286,89 +286,96 @@ function updateUIBasedOnAuth() {
 
 // Function to load and display photo details on details
 function loadPhotoDetails() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const photoId = urlParams.get('photo_id');
+    const photoId = new URLSearchParams(window.location.search).get('photo_id');
+    if (!photoId) return;
 
-    if (photoId) {
-        fetch(`/api/photos/details?photo_id=${photoId}`)
-            .then(response => response.json())
-            .then(photo => {
-                const photoDetailsDiv = document.getElementById('photo-details');
-                if (photo) {
-                    // Display photo details
-                    photoDetailsDiv.innerHTML = `
-                        <img src="${photo.watermark_url}" alt="${photo.title}">
-                        <h3>${photo.title}</h3>
-                        <p>${photo.description}</p>
-                        <p><strong>Price:</strong> $${photo.price.toFixed(2)}</p>
-                        <p><strong>Location:</strong> ${photo.location}</p>
-                        <p><strong>Date Taken:</strong> ${new Date(photo.date_taken).toLocaleDateString()}</p>
-                        ${isAuthenticated ? `<button class="btn" onclick="addToCart(${photo.photo_id})">Add to Cart</button>` : ''}
-                    `;
+    fetch(`/api/photos/details?photo_id=${photoId}`)
+        .then(response => response.json())
+        .then(photo => {
+            const photoDetailsDiv = document.getElementById('photo-details');
+            if (photo) {
+                // Display photo details
+                photoDetailsDiv.innerHTML = `
+                    <img src="${photo.watermark_url}" alt="${photo.title}">
+                    <h3>${photo.title}</h3>
+                    <p>${photo.description}</p>
+                    <p><strong>Price:</strong> $${photo.price.toFixed(2)}</p>
+                    <p><strong>Location:</strong> ${photo.location}</p>
+                    <p><strong>Date Taken:</strong> ${new Date(photo.date_taken).toLocaleDateString()}</p>
+                    ${isAuthenticated ? `<button class="btn" onclick="addToCart(${photo.photo_id})">Add to Cart</button>` : ''}
+                `;
 
-                    // Conditionally display review form or login prompt
-                    const reviewSubmissionDiv = document.getElementById('review-submission');
-                    if (isAuthenticated) {
-                        reviewSubmissionDiv.innerHTML = `
-                            <h4>Leave a Review</h4>
-                            <form id="review-form">
-                                <label for="rating">Rating (1-5):</label>
-                                <input type="number" id="rating" name="rating" min="1" max="5" required>
-                                <label for="review-text">Review:</label>
-                                <textarea id="review-text" name="review-text" required></textarea>
-                                <button type="submit" class="btn">Submit Review</button>
-                            </form>
-                        `;
+                // Conditionally display review form or login prompt
+                const reviewSubmissionDiv = document.getElementById('review-submission');
+                if (isAuthenticated) {
+                    // Check if user has purchased the photo
+                    fetch('/api/purchases')
+                        .then(response => response.json())
+                        .then(purchases => {
+                            const hasPurchased = purchases.some(purchase => purchase.photo_id === parseInt(photoId));
+                            if (hasPurchased) {
+                                // Display review form
+                                reviewSubmissionDiv.innerHTML = `
+                                    <h4>Leave a Review</h4>
+                                    <form id="review-form">
+                                        <label for="rating">Rating (1-5):</label>
+                                        <input type="number" id="rating" name="rating" min="1" max="5" required>
+                                        <label for="review-text">Review:</label>
+                                        <textarea id="review-text" name="review-text" required></textarea>
+                                        <button type="submit" class="btn">Submit Review</button>
+                                    </form>
+                                `;
 
-                        // Handle review submission
-                        const reviewForm = document.getElementById('review-form');
-                        reviewForm.addEventListener('submit', (e) => {
-                            e.preventDefault();
-                            const rating = document.getElementById('rating').value;
-                            const reviewText = document.getElementById('review-text').value.trim();
+                                // Handle review submission
+                                const reviewForm = document.getElementById('review-form');
+                                reviewForm.addEventListener('submit', (e) => {
+                                    e.preventDefault();
+                                    const rating = document.getElementById('rating').value;
+                                    const reviewText = document.getElementById('review-text').value.trim();
 
-                            fetch('/api/reviews', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    photo_id: photoId,
-                                    rating: Number(rating),
-                                    review_text: reviewText
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // Reload reviews after successful submission
-                                    loadReviews(photoId);
-                                    reviewForm.reset();
-                                } else {
-                                    alert(data.message); // Display the error message
-                                }
-                            })
-                            .catch(error => console.error('Error submitting review:', error));
-                        });
-                    } else {
-                        reviewSubmissionDiv.innerHTML = '<p>Please <a href="/login">login</a> to leave a review.</p>';
-                    }
-
-                    // Load and display reviews
-                    loadReviews(photoId);
+                                    fetch('/api/reviews', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            photo_id: photoId,
+                                            rating: Number(rating),
+                                            review_text: reviewText
+                                        })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            // Reload reviews after successful submission
+                                            loadReviews(photoId);
+                                            reviewForm.reset();
+                                        } else {
+                                            alert(data.message); // Display the error message
+                                        }
+                                    })
+                                    .catch(error => console.error('Error submitting review:', error));
+                                });
+                            } else {
+                                reviewSubmissionDiv.innerHTML = '<p>You must purchase this photo to leave a review.</p>';
+                            }
+                        })
+                        .catch(error => console.error('Error fetching purchases:', error));
                 } else {
-                    photoDetailsDiv.innerHTML = '<p>Photo not found.</p>';
+                    reviewSubmissionDiv.innerHTML = '<p>Please <a href="/login">login</a> to leave a review.</p>';
                 }
-            })
-            .catch(error => {
-                console.error('Error fetching photo details:', error);
-                const photoDetailsDiv = document.getElementById('photo-details');
-                photoDetailsDiv.innerHTML = '<p>Unable to load photo details. Please try again later.</p>';
-            });
-    } else {
-        const photoDetailsDiv = document.getElementId('photo-details');
-        photoDetailsDiv.innerHTML = '<p>No photo selected.</p>';
-    }
+
+                // Load and display reviews
+                loadReviews(photoId);
+            } else {
+                photoDetailsDiv.innerHTML = '<p>Photo not found.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching photo details:', error);
+            const photoDetailsDiv = document.getElementById('photo-details');
+            photoDetailsDiv.innerHTML = '<p>Unable to load photo details. Please try again later.</p>';
+        });
 }
 
 function loadReviews(photoId) {

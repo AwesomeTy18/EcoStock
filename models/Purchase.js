@@ -39,6 +39,21 @@ class Purchase {
         }
     }
 
+    static async findByUserAndPhoto(user_id, photo_id) {
+        const sql = 'SELECT * FROM purchases WHERE user_id = ? AND photo_id = ?';
+        try {
+            const row = await new Promise((resolve, reject) => {
+                db.get(sql, [user_id, photo_id], (err, row) => {
+                    if (err) reject(err);
+                    else resolve(row);
+                });
+            });
+            return row ? new Purchase(row.purchase_id, row.user_id, row.photo_id, row.receipt_url, row.purchase_date) : null;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     static async seed() {
         try {
             await new Promise((resolve, reject) => {

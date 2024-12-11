@@ -1,5 +1,6 @@
 const Review = require('../models/Review');
 const { authenticateToken } = require('../utils.js');
+const Purchase = require('../models/Purchase');
 
 const handleReviews = async (req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
@@ -60,6 +61,15 @@ const handleReviews = async (req, res) => {
                 try {
                     const { photo_id, rating, review_text } = JSON.parse(body);
                     if (photo_id && rating && review_text) { // Ensure review_text is provided
+                        // Check if the user has purchased the photo
+                        const purchase = await Purchase.findByUserAndPhoto(req.user.user_id, parseInt(photo_id));
+                        if (!purchase) {
+                            res.statusCode = 403;
+                            res.setHeader('Content-Type', 'application/json');
+                            res.end(JSON.stringify({ success: false, message: 'You must purchase this photo before leaving a review.' }));
+                            return;
+                        }
+
                         // Check if the user has already reviewed this photo
                         const existingReview = await Review.findByUserAndPhoto(req.user.user_id, parseInt(photo_id));
                         if (existingReview) {
