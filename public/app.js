@@ -321,7 +321,7 @@ function loadPhotoDetails() {
                                     loadReviews(photoId);
                                     reviewForm.reset();
                                 } else {
-                                    alert('Failed to submit review.');
+                                    alert(data.message); // Display the error message
                                 }
                             })
                             .catch(error => console.error('Error submitting review:', error));

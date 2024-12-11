@@ -224,6 +224,42 @@ class Review {
     }
 
     /**
+     * Checks if a review exists for a specific user and photo.
+     * @param {number} user_id - The ID of the user.
+     * @param {number} photo_id - The ID of the photo.
+     * @returns {Promise<Review|null>} The existing Review instance or null if none exists.
+     */
+    static async findByUserAndPhoto(user_id, photo_id) {
+        const sql = `
+            SELECT * FROM reviews
+            WHERE user_id = ? AND photo_id = ?
+        `;
+        try {
+            const row = await new Promise((resolve, reject) => {
+                db.get(sql, [user_id, photo_id], (err, row) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(row);
+                    }
+                });
+            });
+            return row ? new Review(
+                row.review_id,
+                row.user_id,
+                row.photo_id,
+                row.rating,
+                row.review_text,
+                row.created_at,
+                row.updated_at
+            ) : null;
+        } catch (err) {
+            console.error('Error checking existing review:', err);
+            throw err;
+        }
+    }
+
+    /**
      * Defines the schema for the reviews table.
      * @returns {string} The SQL statement to create the reviews table.
      */
@@ -250,14 +286,14 @@ class Review {
     static async seed() {
         const sampleReviews = [
             {
-                user_id: 1,
+                user_id: 7,
                 photo_id: 101,
                 rating: 5,
                 review_text: 'Stunning view! Amazing colors.',
                 created_at: '2023-09-05T14:20:00Z',
             },
             {
-                user_id: 2,
+                user_id: 8,
                 photo_id: 102,
                 rating: 4,
                 review_text: 'Very peaceful and calming.',

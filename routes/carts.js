@@ -45,7 +45,8 @@ const handleCarts = async (req, res, parsedUrl) => { // Added async
                     if (photo) {
                         let cart = await Cart.findByUserId(req.user.user_id); // Added await
                         if (!cart) {
-                            cart = await Cart.create(req.user.user_id);
+                            await Cart.create(req.user.user_id);
+                            cart = await Cart.findByUserId(req.user.user_id); // Added await
                         }
                         await cart.addItem(photo_id, quantity || 1); // Added await
                         await cart.save(); // Ensure cart is saved after modification

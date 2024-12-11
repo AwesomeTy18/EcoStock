@@ -60,6 +60,15 @@ const handleReviews = async (req, res) => {
                 try {
                     const { photo_id, rating, review_text } = JSON.parse(body);
                     if (photo_id && rating && review_text) { // Ensure review_text is provided
+                        // Check if the user has already reviewed this photo
+                        const existingReview = await Review.findByUserAndPhoto(req.user.user_id, parseInt(photo_id));
+                        if (existingReview) {
+                            res.statusCode = 400;
+                            res.setHeader('Content-Type', 'application/json');
+                            res.end(JSON.stringify({ success: false, message: 'You have already reviewed this photo.' }));
+                            return;
+                        }
+
                         const review = new Review(
                             null, // review_id is auto-incremented
                             req.user.user_id, 
