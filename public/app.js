@@ -367,6 +367,7 @@ function loadReviews(photoId) {
                     // Create a mapping of user_id to user_name
                     const userMap = {};
                     users.forEach(user => {
+                        console.log(user); // **Debugging Log**
                         userMap[user.user_id] = user.name;
                     });
 

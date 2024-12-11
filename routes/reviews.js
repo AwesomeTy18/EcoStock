@@ -4,7 +4,7 @@ const { authenticateToken } = require('../utils.js');
 const handleReviews = async (req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
     const method = req.method;
-    
+
     if (method === 'GET' && parsedUrl.pathname === '/api/reviews/user') {
         await authenticateToken(req, res, async () => { // Made callback async
             try {
@@ -59,8 +59,14 @@ const handleReviews = async (req, res) => {
             req.on('end', async () => { // Made callback async
                 try {
                     const { photo_id, rating, review_text } = JSON.parse(body);
-                    if (photo_id && rating) {
-                        const review = new Review(req.user.user_id, parseInt(photo_id), parseInt(rating), review_text);
+                    if (photo_id && rating && review_text) { // Ensure review_text is provided
+                        const review = new Review(
+                            null, // review_id is auto-incremented
+                            req.user.user_id, 
+                            parseInt(photo_id), 
+                            parseInt(rating), 
+                            review_text
+                        );
                         await review.save(); // Awaited async function
                         res.statusCode = 201;
                         res.setHeader('Content-Type', 'application/json');

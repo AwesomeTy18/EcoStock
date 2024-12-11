@@ -54,8 +54,8 @@ const handleUsers = async (req, res, parsedUrl) => {
     }
     else if (method === 'GET') {
         if (pathname === '/api/users') {
-            authenticateToken(req, res, () => {
-                const user = User.findById(req.user.user_id);
+            authenticateToken(req, res, async () => {
+                const user = await User.findById(req.user.user_id);
                 if (user) {
                     utils.sendJsonResponse(res, 200, { user_id: user.user_id, name: user.name, email: user.email });
                 } else {
@@ -76,7 +76,7 @@ const handleUsers = async (req, res, parsedUrl) => {
         // Endpoint to get user details by user_id
         else if (method === 'GET' && /^\/api\/users\/\d+$/.test(pathname)) {
             const userId = parseInt(pathname.split('/').pop(), 10);
-            const user = User.findById(userId); // Implement findById in User model
+            const user = await User.findById(userId); // Implement findById in User model
 
             if (user) {
                 utils.sendJsonResponse(res, 200, user);
