@@ -888,6 +888,7 @@ if (photographerForm) {
                 message.style.color = 'green';
                 message.textContent = data.message;
                 photographerForm.reset();
+                window.location.reload();
             } else {
                 message.style.color = 'red';
                 message.textContent = data.message;
@@ -916,7 +917,7 @@ function loadPhotographerDashboard() {
         if (data.message === 'Valid') {
             dashboardDiv.textContent = 'Valid';
             formDiv.style.display = 'none';
-        } else if (data.message = 'Pending') {
+        } else if (data.message === 'Pending') {
             dashboardDiv.textContent = 'Your photographer application is pending approval.';
             formDiv.style.display = 'none';
         } else if (data.message === 'Access Denied') {

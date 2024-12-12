@@ -10,7 +10,7 @@ const handlePhotographers = async (req, res, parsedUrl) => {
             const roles = req.user.roles.split(',');
             if (roles.includes('photographer')) {
                 utils.sendJsonResponse(res, 200, { message: 'Valid' });
-            } else if (await User.exists({ user_id: req.user.user_id, photographer_applicant: true })) {
+            } else if (await User.exists({ user_id: req.user.user_id, photographer_applicant: 1 })) {
                 utils.sendJsonResponse(res, 200, { message: 'Pending' });
             } else {
                 utils.sendJsonResponse(res, 403, { message: 'Access Denied' });
