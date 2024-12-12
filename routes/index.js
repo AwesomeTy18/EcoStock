@@ -3,7 +3,6 @@ const handlePhotos = require('./photos');
 const handleCarts = require('./carts');
 const handlePurchases = require('./purchases');
 const handleReviews = require('./reviews');
-const handleNotifications = require('./notifications');
 const handlePayouts = require('./payouts');
 const handleAdmin = require('./admin'); // Added handleAdmin
 
@@ -21,8 +20,6 @@ const router = (req, res) => {
         handlePurchases(req, res);
     } else if (pathname.startsWith('/reviews')) {
         handleReviews(req, res);
-    } else if (pathname.startsWith('/notifications')) {
-        handleNotifications(req, res);
     } else if (pathname.startsWith('/payouts')) {
         handlePayouts(req, res);
     } else if (pathname.startsWith('/admin')) { // Added admin route

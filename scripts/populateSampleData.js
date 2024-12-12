@@ -10,7 +10,6 @@ const Cart = require('../models/Cart.js');
 const Purchase = require('../models/Purchase.js');
 const Payout = require('../models/Payout.js');
 const Review = require('../models/Review.js');
-const Notification = require('../models/Notification.js');
 const PhotoListing = require('../models/PhotoListing.js');
 
 const db = require('../db.js'); // Ensure db.js initializes tables before seeding
@@ -35,9 +34,6 @@ const populateData = async () => {
 
         await Review.seed();
         console.log('Reviews seeded successfully.');
-
-        await Notification.seed();
-        console.log('Notifications seeded successfully.');
 
         await PhotoListing.seed();
         console.log('Listings seeded successfully.');

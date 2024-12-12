@@ -6,7 +6,9 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.4",
     "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.7",
     "sharp": "^0.33.5",
     "sqlite3": "^5.1.7"
   }

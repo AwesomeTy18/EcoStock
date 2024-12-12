@@ -35,7 +35,7 @@ const handleUsers = async (req, res, parsedUrl) => {
 
                     const user = await User.authenticate(email, password);
                     if (user) {
-                        const token = generateToken({ user_id: user.user_id, name: user.name, roles: user.roles });
+                        const token = generateToken({ user_id: user.user_id, name: user.name, email: user.email, roles: user.roles });
                         res.setHeader('Set-Cookie', serializeCookie('token', token, { httpOnly: false, secure: true, path: '/' }));
                         utils.sendJsonResponse(res, 200, { success: true });
                     } else {

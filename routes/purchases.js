@@ -1,8 +1,10 @@
 const Purchase = require('../models/Purchase');
 const Cart = require('../models/Cart');
 const Photo = require('../models/Photo');
-const Notification = require('../models/Notification');
+const sgMail = require('@sendgrid/mail')
 const { authenticateToken } = require('../utils.js');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const handlePurchases = async (req, res) => { // Added async
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
@@ -28,10 +30,19 @@ const handlePurchases = async (req, res) => { // Added async
                             const purchase = new Purchase(null, req.user.user_id, item.photo_id, receiptUrl, new Date());
                             await purchase.save(); // Added await
 
-                            const notificationMessage = `Purchase successful for photo "${photo.title}"`;
+                            const notificationMsg = {
+                                to : req.user.email,
+                                from : process.env.SENDGRID_EMAIL,
+                                subject : 'Purchase Confirmation',
+                                text : `You have successfully purchased the photo ${photo.title}.`,
+                                html : `<strong>You have successfully purchased the photo ${photo.title}.</strong>`,
+                            }
 
-                            const notification = new Notification(req.user.user_id, notificationMessage);
-                            await notification.save(); // Added await
+                            sgMail.send(notificationMsg).then(() => {
+                                console.log('Email sent');
+                            }).catch((error) => {
+                                console.error('Error sending email:', error);
+                            });
                         }
                         cart.items = [];
                         await cart.save(); // Added await
