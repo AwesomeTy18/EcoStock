@@ -832,3 +832,62 @@ footer {
     margin-top: 10px;
     color: red;
 }
+
+/* Photographer Dashboard Styles */
+#photographer-dashboard-section {
+    background-color: #e9f5ff;
+    padding: 40px 20px;
+}
+
+#photographer-dashboard h2 {
+    font-size: 2em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#photographer-dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+#photographer-form {
+    background-color: #fff;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#photographer-form h3 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+#photographer-form label {
+    font-weight: bold;
+    color: #555;
+}
+
+#photographer-form input,
+#photographer-form textarea {
+    display: block;
+    margin-bottom: 1em;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+}
+
+#photographer-form button.btn {
+    width: 100%;
+    background-color: #28a745;
+    transition: background-color 0.3s;
+}
+
+#photographer-form button.btn:hover {
+    background-color: #218838;
+}

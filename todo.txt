@@ -1,5 +1,5 @@
 customer reviews (done)
-notifications
+notifications (done)
 paypal integration / checkout
 
 photographer accounts

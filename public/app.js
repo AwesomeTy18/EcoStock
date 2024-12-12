@@ -127,6 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentPage === '/cart') {
         loadCart();
     }
+
+    // Load photographer dashboard
+    if (currentPage === '/photographers') {
+        loadPhotographerDashboard();
+    }
 });
 
 // Function to add item to cart
@@ -477,8 +482,6 @@ function showCheckoutForm() {
     if (checkoutFormDiv) {
         checkoutFormDiv.style.display = 'block';
         console.log('Checkout form displayed.');
-    } else {
-        console.error('Checkout form div not found.');
     }
 }
 
@@ -536,15 +539,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (checkoutButton) {
         console.log('Checkout button found. Attaching event listener.');
         checkoutButton.addEventListener('click', handleCheckout);
-    } else {
-        console.error('Checkout button not found.');
     }
 
     if (checkoutForm) {
         console.log('Checkout form found. Attaching submit event listener.');
         checkoutForm.addEventListener('submit', submitCheckoutForm);
-    } else {
-        console.error('Checkout form not found.');
     }
 });
 
@@ -689,48 +688,51 @@ function closeEditReviewModal() {
 }
 
 // Handle edit review form submission
-document.getElementById('edit-review-form').addEventListener('submit', function(event) {
-    event.preventDefault();
+const editReviewForm = document.getElementById('edit-review-form');
+if (editReviewForm) {
+    editReviewForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const reviewId = document.getElementById('edit-review-id').value;
+        const newRating = document.getElementById('edit-rating').value;
+        const newReviewText = document.getElementById('edit-review-text').value.trim();
     
-    const reviewId = document.getElementById('edit-review-id').value;
-    const newRating = document.getElementById('edit-rating').value;
-    const newReviewText = document.getElementById('edit-review-text').value.trim();
-
-    // Validation
-    if (newRating < 1 || newRating > 5) {
-        alert('Rating must be between 1 and 5.');
-        return;
-    }
-
-    if (!newReviewText) {
-        alert('Review text cannot be empty.');
-        return;
-    }
-
-    // Send PUT request to update the review
-    fetch('/api/reviews', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            review_id: reviewId,
-            rating: Number(newRating),
-            review_text: newReviewText
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Review updated successfully.');
-            closeEditReviewModal();
-            loadUserReviews();
-        } else {
-            alert('Failed to update review.');
+        // Validation
+        if (newRating < 1 || newRating > 5) {
+            alert('Rating must be between 1 and 5.');
+            return;
         }
-    })
-    .catch(error => console.error('Error updating review:', error));
-});
+    
+        if (!newReviewText) {
+            alert('Review text cannot be empty.');
+            return;
+        }
+    
+        // Send PUT request to update the review
+        fetch('/api/reviews', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                review_id: reviewId,
+                rating: Number(newRating),
+                review_text: newReviewText
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Review updated successfully.');
+                closeEditReviewModal();
+                loadUserReviews();
+            } else {
+                alert('Failed to update review.');
+            }
+        })
+        .catch(error => console.error('Error updating review:', error));
+    });
+}
 
 // Update the loadUserReviews function to use the new openEditReviewModal function
 function loadUserReviews() {
@@ -781,40 +783,43 @@ function closeDeleteReviewModal() {
 }
 
 // Handle delete review form submission
-document.getElementById('delete-review-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    const reviewId = document.getElementById('delete-review-id').value;
+const deleteReviewForm = document.getElementById('delete-review-form');
+if (deleteReviewForm) {
+    deleteReviewForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const reviewId = document.getElementById('delete-review-id').value;
 
-    // Send DELETE request to remove the review
-    fetch('/api/reviews', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ review_id: parseInt(reviewId) })
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return response.text().then(text => { throw new Error(text) });
-        }
-    })
-    .then(data => {
-        if (data.success) {
-            alert('Review deleted successfully.');
-            closeDeleteReviewModal();
-            loadUserReviews();
-        } else {
-            alert('Failed to delete review: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting review:', error);
-        alert('An error occurred while deleting the review.');
+        // Send DELETE request to remove the review
+        fetch('/api/reviews', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ review_id: parseInt(reviewId) })
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return response.text().then(text => { throw new Error(text) });
+            }
+        })
+        .then(data => {
+            if (data.success) {
+                alert('Review deleted successfully.');
+                closeDeleteReviewModal();
+                loadUserReviews();
+            } else {
+                alert('Failed to delete review: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting review:', error);
+            alert('An error occurred while deleting the review.');
+        });
     });
-});
+}
 
 // Update the loadUserReviews function to include the new openDeleteReviewModal function
 function loadUserReviews() {
@@ -857,4 +862,71 @@ window.onclick = function(event) {
     if (event.target == deleteModal) {
         deleteModal.style.display = 'none';
     }
+}
+
+// Handle Photographer Form Submission
+const photographerForm = document.getElementById('photographer-form-element');
+if (photographerForm) {
+    console.log('Photographer form found. Attaching event listener.');
+    photographerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById('full_name').value.trim();
+        const aboutMe = document.getElementById('about_me').value.trim();
+        const portfolioURL = document.getElementById('portfolio_url').value.trim();
+        const message = document.getElementById('photographer-form-message');
+
+        fetch('/api/photographers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ full_name: fullName, about_me: aboutMe, portfolio_url: portfolioURL })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                message.style.color = 'green';
+                message.textContent = data.message;
+                photographerForm.reset();
+            } else {
+                message.style.color = 'red';
+                message.textContent = data.message;
+            }
+        })
+        .catch(error => {
+            console.error('Error submitting photographer form:', error);
+            message.style.color = 'red';
+            message.textContent = 'An error occurred while submitting the form.';
+        });
+    });
+}
+
+// Function to load photographer dashboard
+function loadPhotographerDashboard() {
+    fetch('/api/photographers', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const dashboardDiv = document.getElementById('photographer-dashboard');
+        const formDiv = document.getElementById('photographer-form');
+        if (data.message === 'Valid') {
+            dashboardDiv.textContent = 'Valid';
+            formDiv.style.display = 'none';
+        } else if (data.message = 'Pending') {
+            dashboardDiv.textContent = 'Your photographer application is pending approval.';
+            formDiv.style.display = 'none';
+        } else if (data.message === 'Access Denied') {
+            dashboardDiv.style.display = 'none';
+            formDiv.style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error loading photographer dashboard:', error);
+        const dashboardDiv = document.getElementById('photographer-dashboard');
+        dashboardDiv.textContent = 'An error occurred while loading the dashboard.';
+    });
 }

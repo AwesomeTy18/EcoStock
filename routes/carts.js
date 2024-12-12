@@ -62,7 +62,7 @@ const handleCarts = async (req, res, parsedUrl) => { // Added async
         });
     }
     else if (method === 'DELETE') {
-        await authenticateToken(req, res, async () => { // Added await and async
+        authenticateToken(req, res, async () => { // Added await and async
             const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
             const photoId = parseInt(parsedUrl.searchParams.get('photo_id'), 10);
             if (photoId) {
