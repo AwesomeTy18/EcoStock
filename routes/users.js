@@ -49,6 +49,50 @@ const handleUsers = async (req, res, parsedUrl) => {
         } else if (pathname === '/api/users/logout') {
             res.setHeader('Set-Cookie', serializeCookie('token', '', { httpOnly: true, secure: true, maxAge: 0, path: '/' }));
             utils.sendJsonResponse(res, 200, { success: true, message: 'Logged out successfully' });
+        } else if (pathname === '/api/users/approve-photographer') {
+            // Authenticate the admin user
+            authenticateToken(req, res, async () => {
+                if (req.user.roles && req.user.roles.includes('admin')) {
+                    let body = '';
+                    req.on('data', chunk => {
+                        body += chunk.toString();
+                    });
+                    req.on('end', async () => {
+                        try {
+                            const { user_id } = JSON.parse(body);
+                            await User.approvePhotographer(user_id);
+                            utils.sendJsonResponse(res, 200, { success: true });
+                        } catch (error) {
+                            console.error('Error approving photographer:', error);
+                            utils.sendJsonResponse(res, 400, { success: false, message: 'Invalid request body' });
+                        }
+                    });
+                } else {
+                    utils.sendJsonResponse(res, 403, { success: false, message: 'Forbidden' });
+                }
+            });
+        } else if (pathname === '/api/users/reject-photographer') {
+            // Authenticate the admin user
+            authenticateToken(req, res, async () => {
+                if (req.user.roles && req.user.roles.includes('admin')) {
+                    let body = '';
+                    req.on('data', chunk => {
+                        body += chunk.toString();
+                    });
+                    req.on('end', async () => {
+                        try {
+                            const { user_id } = JSON.parse(body);
+                            await User.rejectPhotographer(user_id);
+                            utils.sendJsonResponse(res, 200, { success: true });
+                        } catch (error) {
+                            console.error('Error rejecting photographer:', error);
+                            utils.sendJsonResponse(res, 400, { success: false, message: 'Invalid request body' });
+                        }
+                    });
+                } else {
+                    utils.sendJsonResponse(res, 403, { success: false, message: 'Forbidden' });
+                }
+            });
         }
         // Handle other POST routes
     }
@@ -83,6 +127,17 @@ const handleUsers = async (req, res, parsedUrl) => {
             } else {
                 utils.sendJsonResponse(res, 404, { success: false, message: 'User not found' });
             }
+        } else if (pathname === '/api/users/pending-photographers') {
+            // Authenticate the admin user
+            authenticateToken(req, res, async () => {
+                if (req.user.roles && req.user.roles.includes('admin')) {
+                    // Fetch pending photographer applications
+                    const pendingPhotographers = await User.findPendingPhotographers();
+                    utils.sendJsonResponse(res, 200, pendingPhotographers);
+                } else {
+                    utils.sendJsonResponse(res, 403, { success: false, message: 'Forbidden' });
+                }
+            });
         }
         // Handle other GET routes
     }

@@ -75,8 +75,9 @@ class User {
     static async updateOne(filter, update) {
         const fields = Object.keys(update).map(key => `${key} = ?`).join(', ');
         const values = Object.values(update);
-        const sql = `UPDATE users SET ${fields} WHERE ${Object.keys(filter).map(key => `${key} = ?`).join(' AND ')}`;
+        const conditions = Object.keys(filter).map(key => `${key} = ?`).join(' AND ');
         const params = [...values, ...Object.values(filter)];
+        const sql = `UPDATE users SET ${fields} WHERE ${conditions}`;
         try {
             await new Promise((resolve, reject) => {
                 db.run(sql, params, function(err) {
@@ -216,6 +217,62 @@ class User {
             for (const user of sampleUsers) {
                 await User.create(user.name, user.email, user.password, user.roles);
             }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async findPendingPhotographers() {
+        const sql = 'SELECT * FROM users WHERE photographer_applicant = 1';
+        try {
+            const rows = await new Promise((resolve, reject) => {
+                db.all(sql, [], (err, rows) => {
+                    if (err) reject(err);
+                    else resolve(rows);
+                });
+            });
+            return rows.map(row => new User(
+                row.user_id,
+                row.name,
+                row.email,
+                row.password_hash,
+                row.roles,
+                row.photographer_applicant,
+                row.photographer_full_name,
+                row.photographer_about_me,
+                row.photographer_portfolio_url
+            ));
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async approvePhotographer(user_id) {
+        try {
+            const user = await User.findById(user_id);
+            if (user) {
+                let roles = user.roles ? user.roles.split(',') : [];
+                if (!roles.includes('photographer')) {
+                    roles.push('photographer');
+                }
+                await User.updateOne({ user_id }, {
+                    roles: roles.join(','),
+                    photographer_applicant: 0 // Mark application as processed
+                });
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async rejectPhotographer(user_id) {
+        try {
+            await User.updateOne({ user_id }, {
+                photographer_applicant: 0,
+                photographer_full_name: '',
+                photographer_about_me: '',
+                photographer_portfolio_url: ''
+            });
         } catch (err) {
             throw err;
         }
