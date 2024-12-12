@@ -89,6 +89,23 @@ class User {
         }
     }
 
+    static async exists(filter) {
+        const conditions = Object.keys(filter).map(key => `${key} = ?`).join(' AND ');
+        const values = Object.values(filter);
+        const sql = `SELECT 1 FROM users WHERE ${conditions} LIMIT 1`;
+        try {
+            const row = await new Promise((resolve, reject) => {
+                db.get(sql, values, (err, row) => {
+                    if (err) reject(err);
+                    else resolve(row);
+                });
+            });
+            return !!row;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     static getTableDefinition() {
         return `
             CREATE TABLE IF NOT EXISTS users (
