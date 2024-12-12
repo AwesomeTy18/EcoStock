@@ -126,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle Cart Page
     if (currentPage === '/cart') {
         loadCart();
+        verifyPaypalPurchase();
     }
 
     // Load photographer dashboard
@@ -567,7 +568,7 @@ function submitCheckoutForm(event) {
 document.addEventListener('DOMContentLoaded', () => {
     const checkoutButton = document.getElementById('checkout-button');
     const checkoutForm = document.getElementById('checkoutForm');
-    verifyPaypalPurchase()
+    
     if (checkoutButton) {
         console.log('Checkout button found. Attaching event listener.');
         // checkoutButton.addEventListener('click', handleCheckout);
