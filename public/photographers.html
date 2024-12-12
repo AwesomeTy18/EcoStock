@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Pictures - EcoStock</title>
+    <title>Photographer Dashboard - EcoStock</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -28,10 +28,26 @@
         </nav>
     </header>
     <main>
-        <section id="my-pictures-section">
-            <h2>My Pictures</h2>
-            <div id="my-pictures">
-                <!-- Purchased photos will be dynamically loaded here -->
+        <section id="photographer-dashboard-section">
+            <h2>Photographer Dashboard</h2>
+            <div id="photographer-dashboard">
+                <!-- Content will be loaded via JavaScript -->
+            </div>
+            <div id="photographer-form" style="display: none;">
+                <h3>Become a Photographer</h3>
+                <form id="photographer-form-element">
+                    <label for="full_name">Full Name:</label>
+                    <input type="text" id="full_name" name="full_name" required>
+                    
+                    <label for="about_me">About Me:</label>
+                    <textarea id="about_me" name="about_me" required></textarea>
+                    
+                    <label for="portfolio_url">Portfolio URL:</label>
+                    <input type="url" id="portfolio_url" name="portfolio_url" required>
+                    
+                    <button type="submit" class="btn">Submit</button>
+                </form>
+                <p id="photographer-form-message"></p>
             </div>
         </section>
     </main>

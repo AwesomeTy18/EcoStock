@@ -4,6 +4,7 @@ const handlePhotos = require('./routes/photos');
 const handleReviews = require('./routes/reviews');
 const { handlePurchases, handleCreatePayment, handleExecutePayment } = require('./routes/purchases');
 const handleAdmin = require('./routes/admin'); // Import admin handler
+const handlePhotographers = require('./routes/photographers'); // Import photographers handler
 const User = require('./models/User');
 // Import other route handlers as needed
 
@@ -64,6 +65,9 @@ const router = async (req, res, parsedUrl) => {
         }
         else if (pathname.startsWith('/api/executepayment')) {
             await handleExecutePayment(req, res, parsedUrl);
+        }
+        else if (pathname.startsWith('/api/photographers')) { // New photographers route
+            await handlePhotographers(req, res, parsedUrl);
         }
         // Add other API routes here
         else {

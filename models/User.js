@@ -2,12 +2,16 @@ const db = require('../db.js');
 const utils = require('../utils/hash.js'); // Assuming this has hashing functions
 
 class User {
-    constructor(user_id, name, email, passwordHash, roles) {
+    constructor(user_id, name, email, passwordHash, roles, photographer_applicant = false, photographer_full_name = '', photographer_about_me = '', photographer_portfolio_url = '') {
         this.user_id = user_id;
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
         this.roles = roles; // New roles attribute
+        this.photographer_applicant = photographer_applicant;
+        this.photographer_full_name = photographer_full_name;
+        this.photographer_about_me = photographer_about_me;
+        this.photographer_portfolio_url = photographer_portfolio_url;
     }
 
     static async findByEmail(email) {
@@ -19,7 +23,7 @@ class User {
                     else resolve(row);
                 });
             });
-            return row ? new User(row.user_id, row.name, row.email, row.password_hash, row.roles) : null;
+            return row ? new User(row.user_id, row.name, row.email, row.password_hash, row.roles, row.photographer_applicant, row.photographer_full_name, row.photographer_about_me, row.photographer_portfolio_url) : null;
         } catch (err) {
             throw err;
         }
@@ -34,7 +38,7 @@ class User {
                     else resolve(row);
                 });
             });
-            return row ? new User(row.user_id, row.name, row.email, row.password_hash, row.roles) : null;
+            return row ? new User(row.user_id, row.name, row.email, row.password_hash, row.roles, row.photographer_applicant, row.photographer_full_name, row.photographer_about_me, row.photographer_portfolio_url) : null;
         } catch (err) {
             throw err;
         }
@@ -52,17 +56,51 @@ class User {
         }
     }
 
-    static async create(name, email, password, roles = 'user') {
+    static async create(name, email, password, roles = 'user', photographer_applicant = false, photographer_full_name = '', photographer_about_me = '', photographer_portfolio_url = '') {
         const passwordHash = utils.hashPassword(password);
-        const sql = 'INSERT INTO users (name, email, password_hash, roles, created_at) VALUES (?, ?, ?, ?, ?)';
+        const sql = 'INSERT INTO users (name, email, password_hash, roles, photographer_applicant, photographer_full_name, photographer_about_me, photographer_portfolio_url, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
         try {
             const result = await new Promise((resolve, reject) => {
-                db.run(sql, [name, email, passwordHash, roles, new Date().toISOString()], function(err) {
+                db.run(sql, [name, email, passwordHash, roles, photographer_applicant, photographer_full_name, photographer_about_me, photographer_portfolio_url, new Date().toISOString()], function(err) {
                     if (err) reject(err);
                     else resolve({ lastID: this.lastID });
                 });
             });
-            return new User(result.lastID, name, email, passwordHash, roles);
+            return new User(result.lastID, name, email, passwordHash, roles, photographer_applicant, photographer_full_name, photographer_about_me, photographer_portfolio_url);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async updateOne(filter, update) {
+        const fields = Object.keys(update).map(key => `${key} = ?`).join(', ');
+        const values = Object.values(update);
+        const sql = `UPDATE users SET ${fields} WHERE ${Object.keys(filter).map(key => `${key} = ?`).join(' AND ')}`;
+        const params = [...values, ...Object.values(filter)];
+        try {
+            await new Promise((resolve, reject) => {
+                db.run(sql, params, function(err) {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async exists(filter) {
+        const conditions = Object.keys(filter).map(key => `${key} = ?`).join(' AND ');
+        const values = Object.values(filter);
+        const sql = `SELECT 1 FROM users WHERE ${conditions} LIMIT 1`;
+        try {
+            const row = await new Promise((resolve, reject) => {
+                db.get(sql, values, (err, row) => {
+                    if (err) reject(err);
+                    else resolve(row);
+                });
+            });
+            return !!row;
         } catch (err) {
             throw err;
         }
@@ -76,6 +114,10 @@ class User {
                 email TEXT NOT NULL UNIQUE,
                 password_hash TEXT NOT NULL,
                 roles TEXT,
+                photographer_applicant BOOLEAN DEFAULT 0,
+                photographer_full_name TEXT DEFAULT '',
+                photographer_about_me TEXT DEFAULT '',
+                photographer_portfolio_url TEXT DEFAULT '',
                 created_at TEXT
             );
         `;

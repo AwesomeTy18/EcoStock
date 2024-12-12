@@ -135,7 +135,7 @@ const server = http.createServer(async (req, res) => {
             }
             else if (pathname.startsWith('/admin/')) {
                 filePath = path.join(__dirname, 'public', 'admin', `${pathname.substring(7)}.html`);
-            } else if (['/login', '/cart', '/my-pictures', '/details', '/register', '/my-reviews'].includes(pathname)) {
+            } else if (['/login', '/cart', '/my-pictures', '/details', '/register', '/my-reviews', '/photographers'].includes(pathname)) {
                 filePath = path.join(__dirname, 'public', `${pathname.substring(1)}.html`);
             }
             await serveStaticFile(res, filePath);

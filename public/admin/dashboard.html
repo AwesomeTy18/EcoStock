@@ -1,16 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin Dashboard - EcoStock</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
     <header>
-        <h1>EcoStock Admin</h1>
+        <h1>EcoStock Admin Dashboard</h1>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
@@ -27,22 +26,146 @@
         </nav>
     </header>
     <main>
-        <section id="upload-image-section">
-            <h2>Upload New Image</h2>
-            <form id="upload-image-form" enctype="multipart/form-data">
-                <input type="file" name="image" accept="image/*" required>
-                <input type="text" name="title" placeholder="Title" required>
-                <textarea name="description" placeholder="Description" required></textarea>
-                <input type="number" name="price" placeholder="Price" required>
-                <button type="submit">Upload</button>
-            </form>
-            <div id="upload-status"></div>
+        <!-- Tabs Navigation (Now only Photographer Requests and Image Requests) -->
+        <div class="tabs" style="max-width: 1200px; margin: 20px auto;">
+            <button class="btn tab-button active" data-tab="photographer-requests">Photographer Requests</button>
+            <button class="btn tab-button" data-tab="image-requests">Image Requests</button>
+        </div>
+
+        <!-- Photographer Requests Section -->
+        <section id="photographer-requests" class="tab admin-section active">
+            <div class="admin-content">
+                <h2>Photographer Requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Portfolio Link</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="photographer-requests-table">
+                        <!-- Dynamically populated content -->
+                        <tr>
+                            <td>1</td>
+                            <td>Jane Doe</td>
+                            <td>jane@example.com</td>
+                            <td><a href="http://portfolio.jane.com" target="_blank">View Portfolio</a></td>
+                            <td>
+                                <button class="btn btn-approve approve-btn">Approve</button>
+                                <button class="btn btn-danger reject-btn">Reject</button>
+                            </td>
+                        </tr>
+                        <!-- More rows as needed -->
+                    </tbody>
+                </table>
+            </div>
         </section>
+
+        <!-- Image Requests Section -->
+        <section id="image-requests" class="tab admin-section">
+            <div class="admin-content">
+                <h2>Image Requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>User</th>
+                            <th>Image Title</th>
+                            <th>Requested At</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="image-requests-table">
+                        <!-- Dynamically populated content -->
+                        <tr>
+                            <td>101</td>
+                            <td>John Smith</td>
+                            <td>Sunset Over Mountains</td>
+                            <td>2024-04-15</td>
+                            <td>Pending</td>
+                            <td>
+                                <button class="btn btn-approve approve-request-btn">Approve</button>
+                                <button class="btn btn-danger deny-request-btn">Deny</button>
+                            </td>
+                        </tr>
+                        <!-- More rows as needed -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
     </main>
     <footer>
         <p>&copy; 2024 EcoStock</p>
     </footer>
     <script src="/app.js"></script>
     <script src="/admin.js"></script>
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabs = document.querySelectorAll('.tab');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    // Hide all tabs
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    // Show corresponding tab
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Handle Approve/Reject Photographer Requests
+            document.querySelectorAll('.approve-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const row = button.closest('tr');
+                    const photographerId = row.querySelector('td').innerText;
+                    // Implement your approve functionality here
+                    alert(`Photographer ID ${photographerId} approved.`);
+                    row.remove();
+                });
+            });
+
+            document.querySelectorAll('.reject-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const row = button.closest('tr');
+                    const photographerId = row.querySelector('td').innerText;
+                    // Implement your reject functionality here
+                    alert(`Photographer ID ${photographerId} rejected.`);
+                    row.remove();
+                });
+            });
+
+            // Handle Approve/Deny Image Requests
+            document.querySelectorAll('.approve-request-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const row = button.closest('tr');
+                    const requestId = row.querySelector('td').innerText;
+                    // Implement your approve request functionality here
+                    alert(`Image Request ID ${requestId} approved.`);
+                    row.querySelector('td:nth-child(5)').innerText = 'Approved';
+                });
+            });
+
+            document.querySelectorAll('.deny-request-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const row = button.closest('tr');
+                    const requestId = row.querySelector('td').innerText;
+                    // Implement your deny request functionality here
+                    alert(`Image Request ID ${requestId} denied.`);
+                    row.querySelector('td:nth-child(5)').innerText = 'Denied';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
