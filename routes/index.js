@@ -1,10 +1,11 @@
 const handleUsers = require('./users');
 const handlePhotos = require('./photos');
 const handleCarts = require('./carts');
-const handlePurchases = require('./purchases');
+const {handlePurchases, handleCreatePayment, handleExecutePayment} = require('./purchases');
 const handleReviews = require('./reviews');
 const handlePayouts = require('./payouts');
 const handleAdmin = require('./admin'); // Added handleAdmin
+const handleCreatePayment = require('./purchases');
 
 const router = (req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
@@ -24,6 +25,10 @@ const router = (req, res) => {
         handlePayouts(req, res);
     } else if (pathname.startsWith('/admin')) { // Added admin route
         handleAdmin(req, res, parsedUrl); // Updated to pass parsedUrl
+    } else if (pathname.startsWith('/createpayment')) {
+        handleCreatePayment(req, res, parsedUrl);
+    } else if (pathname.startsWith('/executepayment')) {
+        handleExecutePayment(req, res, parsedUrl);
     } else {
         res.statusCode = 404;
         res.end('Not Found');

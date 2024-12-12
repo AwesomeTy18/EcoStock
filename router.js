@@ -2,7 +2,7 @@ const handleCarts = require('./routes/carts');
 const handleUsers = require('./routes/users');
 const handlePhotos = require('./routes/photos');
 const handleReviews = require('./routes/reviews');
-const handlePurchases = require('./routes/purchases');
+const { handlePurchases, handleCreatePayment, handleExecutePayment } = require('./routes/purchases');
 const handleAdmin = require('./routes/admin'); // Import admin handler
 const handlePhotographers = require('./routes/photographers'); // Import photographers handler
 const User = require('./models/User');
@@ -60,6 +60,12 @@ const router = async (req, res, parsedUrl) => {
         else if (pathname.startsWith('/api/admin')) {
             await handleAdmin(req, res, parsedUrl);
         }
+        else if (pathname.startsWith('/api/createpayment')) {
+            await handleCreatePayment(req, res, parsedUrl);
+        }
+        else if (pathname.startsWith('/api/executepayment')) {
+            await handleExecutePayment(req, res, parsedUrl);
+        }
         else if (pathname.startsWith('/api/photographers')) { // New photographers route
             await handlePhotographers(req, res, parsedUrl);
         }
@@ -70,6 +76,7 @@ const router = async (req, res, parsedUrl) => {
             res.end(JSON.stringify({ success: false, message: 'API Route Not Found' }));
         }
     } catch (error) {
+        console.log(error)
         res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ success: false, message: 'Internal Server Error' }));
