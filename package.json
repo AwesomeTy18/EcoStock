@@ -9,6 +9,9 @@
     "@sendgrid/mail": "^8.1.4",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
+    "install": "^0.13.0",
+    "npm": "^10.9.2",
+    "paypal-rest-sdk": "^1.8.1",
     "sharp": "^0.33.5",
     "sqlite3": "^5.1.7"
   }

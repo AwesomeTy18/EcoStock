@@ -488,6 +488,38 @@ function handleCheckout() {
     showCheckoutForm();
 }
 
+function handlePaypalCheckout() {
+    console.log('Paypal checkout button clicked.');
+    fetch('/api/createpayment', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.approvalUrl) {
+            window.location.href = data.approvalUrl;
+        }
+    });
+}
+
+function verifyPaypalPurchase() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const payment_id = urlParams.get('paymentId');
+    const payer_id = urlParams.get('PayerID');
+    fetch('/api/executepayment', {
+        method: 'POST',
+        body: JSON.stringify({
+            paymentId: payment_id,
+            payerId: payer_id
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = window.location.pathname;
+        }
+    });
+}
+
 // Function to handle checkout form submission
 function submitCheckoutForm(event) {
     event.preventDefault(); // Prevents the default form submission behavior
@@ -532,10 +564,11 @@ function submitCheckoutForm(event) {
 document.addEventListener('DOMContentLoaded', () => {
     const checkoutButton = document.getElementById('checkout-button');
     const checkoutForm = document.getElementById('checkoutForm');
-
+    verifyPaypalPurchase()
     if (checkoutButton) {
         console.log('Checkout button found. Attaching event listener.');
-        checkoutButton.addEventListener('click', handleCheckout);
+        // checkoutButton.addEventListener('click', handleCheckout);
+        checkoutButton.addEventListener('click', handlePaypalCheckout);
     } else {
         console.error('Checkout button not found.');
     }
