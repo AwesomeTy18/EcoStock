@@ -1,13 +1,6 @@
-customer reviews (done)
-notifications (done)
-paypal integration / checkout
-
-photographer accounts
-photographer dashboard
+photographer dashboard 
 photographer payouts
 photographer photo upload
 
 admin dashboard
 admins can approve/deny photographer uploads before they go to store
-
-mysql (done)

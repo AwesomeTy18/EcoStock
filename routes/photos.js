@@ -65,7 +65,6 @@ const handlePhotos = async (req, res, parsedUrl, session) => { // Added async
                     const photo = await Photo.findById(photoId); // Added await
                     if (photo) {
                         // Serve the high-resolution photo
-                        // ...existing code to serve photo...
                     } else {
                         utils.sendJsonResponse(res, 404, { success: false, message: 'Photo not found' });
                     }

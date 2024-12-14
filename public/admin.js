@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .then(pendingPhotographers => {
-            tableBody.innerHTML = ''; // Clear existing rows
+            tableBody.innerHTML = ''; 
             pendingPhotographers.forEach(photographer => {
                 const row = document.createElement('tr');
     
