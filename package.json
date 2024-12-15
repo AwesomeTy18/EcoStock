@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node server.js",
     "test": "npm run reset-db && jasmine",
-    "reset-db": "node scripts/removeDatabase.js && node scripts/initDatabase.js && node scripts/populateSampleData.js"
+    "reset-db": "node scripts/removeDatabase.js && node scripts/initDatabase.js && node scripts/populateSampleData.js",
+    "create-db": "node scripts/initDatabase.js && node scripts/populateSampleData.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^8.1.4",

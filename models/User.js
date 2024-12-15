@@ -154,7 +154,7 @@ class User {
                     name: 'Michael Cerne',
                     email: 'mac873@scarletmail.rutgers.edu',
                     password: 'password123',
-                    roles: '',
+                    roles: 'photographer',
                     preferences: { theme: 'light' },
                     created_at: new Date().toISOString(),
                 },
