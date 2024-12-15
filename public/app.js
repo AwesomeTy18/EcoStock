@@ -180,24 +180,26 @@ function loadPhotos(searchQuery = '') {
             const photoGallery = document.getElementById('photo-gallery');
             photoGallery.innerHTML = '';
             photos.forEach(photo => {
-                // Fetch average rating for each photo
-                fetch(`/api/reviews/average?photo_id=${photo.photo_id}`)
-                    .then(response => response.json())
-                    .then(avgRating => {
-                        const photoCard = document.createElement('div');
-                        photoCard.classList.add('photo-card');
-                        photoCard.innerHTML = `
-                            <img src="${photo.watermark_url}" alt="${photo.title}">
-                            <h3>${photo.title}</h3>
-                            <p>${photo.description}</p>
-                            <p><strong>Price:</strong> $${photo.price.toFixed(2)}</p>
-                            <p><strong>Rating:</strong> ${avgRating.toFixed(1)} / 5</p>
-                            ${isAuthenticated ? `<button class="btn" onclick="addToCart(${photo.photo_id})">Add to Cart</button>` : ''}
-                            <button class="btn" onclick="viewDetails(${photo.photo_id})">Details</button>
-                        `;
-                        photoGallery.appendChild(photoCard);
-                    })
-                    .catch(error => console.error('Error fetching average rating:', error));
+                if (photo.pending_approval === 0) {
+                    // Fetch average rating for each photo
+                    fetch(`/api/reviews/average?photo_id=${photo.photo_id}`)
+                        .then(response => response.json())
+                        .then(avgRating => {
+                            const photoCard = document.createElement('div');
+                            photoCard.classList.add('photo-card');
+                            photoCard.innerHTML = `
+                                <img src="${photo.watermark_url}" alt="${photo.title}">
+                                <h3>${photo.title}</h3>
+                                <p>${photo.description}</p>
+                                <p><strong>Price:</strong> $${photo.price.toFixed(2)}</p>
+                                <p><strong>Rating:</strong> ${avgRating.toFixed(1)} / 5</p>
+                                ${isAuthenticated ? `<button class="btn" onclick="addToCart(${photo.photo_id})">Add to Cart</button>` : ''}
+                                <button class="btn" onclick="viewDetails(${photo.photo_id})">Details</button>
+                            `;
+                            photoGallery.appendChild(photoCard);
+                        })
+                        .catch(error => console.error('Error fetching average rating:', error));
+                }
             });
         })
         .catch(error => console.error('Error loading photos:', error));
