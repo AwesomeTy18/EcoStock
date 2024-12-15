@@ -8,7 +8,6 @@ const User = require('../models/User.js');
 const Photo = require('../models/Photo.js');
 const Cart = require('../models/Cart.js');
 const Purchase = require('../models/Purchase.js');
-const Payout = require('../models/Payout.js');
 const Review = require('../models/Review.js');
 const PhotoListing = require('../models/PhotoListing.js');
 
@@ -28,9 +27,6 @@ const populateData = async () => {
 
         await Purchase.seed();
         console.log('Purchases seeded successfully.');
-
-        await Payout.seed();
-        console.log('Payouts seeded successfully.');
 
         await Review.seed();
         console.log('Reviews seeded successfully.');

@@ -22,7 +22,6 @@ db.serialize(() => {
     const Purchase = require('../models/Purchase.js');
     const Review = require('../models/Review.js');
     const Cart = require('../models/Cart.js');
-    const Payout = require('../models/Payout.js');
     const CartItem = require('../models/CartItem.js');
 
     // Define the initialization order
@@ -33,8 +32,7 @@ db.serialize(() => {
         PhotoListing,
         Photo,
         Purchase,
-        Review,
-        Payout
+        Review
     ];
 
     // Initialize tables in the specified order
