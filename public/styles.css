@@ -212,8 +212,15 @@ footer {
     margin: 0 0 10px 0;
 }
 
-.cart-item p {
+.cart-item p,
+.cart-item span {
     margin: 5px 0;
+}
+
+.cart-item span {
+    flex: 1;
+    margin-right: 10px;
+    font-size: 16px;
 }
 
 .cart-item button {
@@ -397,44 +404,6 @@ footer {
     border-radius: 5px;
 }
 
-/* Cart Item Styles */
-.cart-item {
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 10px 0;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.cart-item img {
-    width: 100px;
-    height: auto;
-    border-radius: 5px;
-    margin-right: 20px;
-}
-
-.cart-item span {
-    flex: 1;
-    margin-right: 10px;
-    font-size: 16px;
-}
-
-.cart-item button {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.cart-item button:hover {
-    background-color: #c82333;
-}
-
 /* Cart Total Styles */
 #cart-total {
     text-align: right;
@@ -443,21 +412,6 @@ footer {
 
 #cart-total h3 {
     font-size: 20px;
-}
-
-/* Checkout Button Styles */
-#checkout-button {
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-#checkout-button:hover {
-    background-color: #218838;
 }
 
 /* Cart Message Styles */
@@ -573,22 +527,31 @@ footer {
 
 /* Button styles */
 .btn {
-    background-color: #4CAF50; /* EcoStock's primary color */
+    background-color: #007bff; /* Chose primary color */
+    color: #fff;
+    padding: 10px 15px;
+    margin: 4px 2px;
     border: none;
-    color: white;
-    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
     transition: background-color 0.3s;
 }
 
 .btn:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
 }
 
 /* Download button styles */
