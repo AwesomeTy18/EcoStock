@@ -188,6 +188,87 @@ class Photo {
         `;
     }
 
+    static async findPending() {
+        const sql = 'SELECT * FROM photos WHERE pending_approval = 1';
+        try {
+            const rows = await new Promise((resolve, reject) => {
+                db.all(sql, [], (err, rows) => {
+                    if (err) reject(err);
+                    else resolve(rows);
+                });
+            });
+            return rows.map(row => new Photo(
+                row.photo_id,
+                row.photographer_id,
+                row.price,
+                row.title,
+                row.description,
+                row.location,
+                row.date_taken,
+                row.watermark_url,
+                row.high_res_url,
+                row.created_at
+            ));
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async approvePhoto(photo_id) {
+        const sql = 'UPDATE photos SET pending_approval = 0 WHERE photo_id = ?';
+        try {
+            await new Promise((resolve, reject) => {
+                db.run(sql, [photo_id], function(err) {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async denyPhoto(photo_id) {
+        const sql = 'DELETE FROM photos WHERE photo_id = ?';
+        try {
+            await new Promise((resolve, reject) => {
+                db.run(sql, [photo_id], function(err) {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async findByPhotographerId(photographer_id) {
+        const sql = 'SELECT * FROM photos WHERE photographer_id = ?';
+        try {
+            const rows = await new Promise((resolve, reject) => {
+                db.all(sql, [photographer_id], (err, rows) => {
+                    if (err) reject(err);
+                    else resolve(rows);
+                });
+            });
+            return rows.map(row => new Photo(
+                row.photo_id,
+                row.photographer_id,
+                row.price,
+                row.title,
+                row.description,
+                row.location,
+                row.date_taken,
+                row.watermark_url,
+                row.high_res_url,
+                row.created_at,
+                row.pending_approval
+            ));
+        } catch (err) {
+            throw err;
+        }
+    }
+
     // Add other necessary methods as needed
 }
 
