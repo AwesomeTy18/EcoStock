@@ -135,6 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+
+
 // Function to add item to cart
 function addToCart(photoId) {
     fetch('/api/carts', { // Updated to use '/api/carts'
@@ -195,6 +197,7 @@ function loadPhotos(searchQuery = '') {
                                 <p><strong>Rating:</strong> ${avgRating.toFixed(1)} / 5</p>
                                 ${isAuthenticated ? `<button class="btn" onclick="addToCart(${photo.photo_id})">Add to Cart</button>` : ''}
                                 <button class="btn" onclick="viewDetails(${photo.photo_id})">Details</button>
+                                ${checkAdmin() ? `<button id="delete-button" onclick="deletePhotoAdmin(${photo.photo_id})">Delete</button>` : ''}
                             `;
                             photoGallery.appendChild(photoCard);
                         })
@@ -241,6 +244,8 @@ function parseJwt(token) {
 // Global variables
 let isAuthenticated = false;
 let userName = null;
+// Variable to store user roles
+let userRoles = [];
 
 // Immediately check for token cookie
 const token = getCookie('token');
@@ -248,9 +253,15 @@ if (token) {
     isAuthenticated = true;
     const userPayload = parseJwt(token);
     userName = userPayload.name || 'User';
+    userRoles = userPayload.roles || []; // Extract roles from token payload
 } else {
     isAuthenticated = false;
     userName = null;
+    userRoles = [];
+}
+
+function checkAdmin() {
+    return isAuthenticated && userRoles.includes('admin');
 }
 
 // Modify displayUserInfo to use userName and remove fetch call
@@ -926,7 +937,7 @@ if (photographerForm) {
                 message.style.color = 'green';
                 message.textContent = data.message;
                 photographerForm.reset();
-                window.location.reload();
+                window.location.href = window.location.pathname;
             } else {
                 message.style.color = 'red';
                 message.textContent = data.message;
@@ -955,6 +966,49 @@ function loadPhotographerDashboard() {
         if (data.message === 'Valid') {
             dashboardDiv.style.display = 'block';
             formDiv.style.display = 'none';
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabs = document.querySelectorAll('.tab');
+        
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    // Hide all tabs
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    // Show corresponding tab
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            const uploadForm = document.getElementById('image-application-form');
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(uploadForm);
+        
+                    fetch('/api/photographers/upload', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Image uploaded successfully and is pending approval.');
+                            uploadForm.reset();
+                            
+                        } else {
+                            alert('Error uploading image: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error uploading image:', error);
+                        alert('An error occurred while uploading the image.');
+                    });
+                });
+            }
+            loadPhotographerListings(); // Load the listings
         } else if (data.message === 'Pending') {
             dashboardDiv.textContent = 'Your photographer application is pending approval.';
             dashboardDiv.style.textAlign = 'center';
@@ -971,4 +1025,111 @@ function loadPhotographerDashboard() {
         const dashboardDiv = document.getElementById('photographer-dashboard');
         dashboardDiv.textContent = 'An error occurred while loading the dashboard.';
     });
+}
+
+// Add a new function to load the photographer's listings and ratings
+function loadPhotographerListings() {
+    fetch('/api/photographers/listings')
+        .then(response => response.json())
+        .then(listings => {
+            const tableBody = document.getElementById('listing-reviews-table');
+            tableBody.innerHTML = '';
+
+            listings.forEach(listing => {
+                const row = document.createElement('tr');
+
+                // Image Cell
+                const imageCell = document.createElement('td');
+                const img = document.createElement('img');
+                img.src = listing.watermark_url;
+                img.alt = listing.title;
+                img.width = 100;
+                imageCell.appendChild(img);
+                row.appendChild(imageCell);
+
+                // Image Title Cell with link
+                const titleCell = document.createElement('td');
+                const titleLink = document.createElement('a');
+                titleLink.href = `/details?photo_id=${listing.photo_id}`;
+                titleLink.textContent = listing.title;
+                titleCell.appendChild(titleLink);
+                row.appendChild(titleCell);
+
+                // Price Cell
+                const priceCell = document.createElement('td');
+                priceCell.textContent = `$${listing.price.toFixed(2)}`;
+                row.appendChild(priceCell);
+
+                // Rating Cell
+                const ratingCell = document.createElement('td');
+                ratingCell.textContent = listing.average_rating ? listing.average_rating.toFixed(1) : 'No ratings yet';
+                row.appendChild(ratingCell);
+
+                // Approval Cell
+                const approvalCell = document.createElement('td');
+                approvalCell.textContent = listing.pending_approval ? 'Pending Approval' : 'Approved';
+                row.appendChild(approvalCell);
+
+                const actionCell = document.createElement('td');
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'btn-danger';
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', () => {
+                    deletePhoto(listing.photo_id);
+                });
+                actionCell.appendChild(deleteButton);
+                row.appendChild(actionCell);
+
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading listings:', error);
+        });
+}
+
+// Function to delete a photo for photographers
+function deletePhoto(photoId) {
+    if (confirm('Are you sure you want to delete this photo?')) {
+        fetch(`/api/photos`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ photo_id: photoId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Photo deleted successfully.');
+                window.location.href = window.location.pathname;
+            } else {
+                alert('Failed to delete photo.');
+            }
+        })
+        .catch(error => console.error('Error deleting photo:', error));
+    }
+}
+
+// Add the deletePhoto function
+function deletePhotoAdmin(photoId) {
+    if (confirm('Are you sure you want to delete this photo?')) {
+        fetch(`/api/photos/admindelete`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ photo_id: photoId })
+        })
+        .then(response => {
+            if (response.status === 200) {
+                alert('Photo deleted successfully.');
+                loadPhotos(); // Reload photos after deletion
+            } else {
+                alert('Failed to delete photo.');
+            }
+        })
+        .catch(error => console.error('Error deleting photo:', error));
+    }
 }

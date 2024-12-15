@@ -15,12 +15,12 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/cart" class="auth-required">Cart</a></li>
                 <li id="auth-link" class="unauthenticated"><a href="/login">Login</a></li>
+                <li><a href="/photographers" class="auth-required">Sell</a></li>
                 <li id="user-info" class="dropdown auth-required" style="display: none;">
                     <a href="#" class="dropbtn">User</a>
                     <div class="dropdown-content">
                         <a href="/my-pictures" id="view-pics">My Pictures</a>
                         <a href="/my-reviews" id="view-reviews">My Reviews</a>
-                        
                         <a href="#" id="logout">Logout</a>
                     </div>
                 </li>
@@ -32,11 +32,11 @@
         <div id="photographer-dashboard" style="display: none;">
             <!-- Tabs Navigation -->
             <div class="tabs" style="max-width: 1200px; margin: 20px auto;">
-                <button class="btn tab-button active" data-tab="upload-image">Upload Image</button>
-                <button class="btn tab-button" data-tab="my-listings-reviews">My Listings & Reviews</button>
+                <button class="btn tab-button active" data-tab="my-listings-reviews">My Listings & Reviews</button>
+                <button class="btn tab-button" data-tab="upload-image">Upload Image</button>
             </div>
 
-            <section id="upload-image" class="tab photographer-section active">
+            <section id="upload-image" class="tab photographer-section">
                 <div id="image-application">
                     <h2>Upload a new image</h2>
                     <form id="image-application-form">
@@ -47,7 +47,7 @@
                         <input type="text" id="description" name="description" required>
                         
                         <label for="price">Price:</label>
-                        <input type="number" id="price" name="price" required>
+                        <input type="double" id="price" name="price" required>
                         
                         <label for="location">Location:</label>
                         <input type="text" id="location" name="location" required>
@@ -64,13 +64,18 @@
             </section>
     
             <!-- Listings & Reviews -->
-            <section id="my-listings-reviews" class="tab photographer-section">
+            <section id="my-listings-reviews" class="tab photographer-section active">
                 <div class="listings-reviews">
                     <h2>Listings & Reviews</h2>
                     <table>
                         <thead>
                             <tr>
-                                
+                                <th>Image</th>
+                                <th>Image Title</th>
+                                <th>Price</th>
+                                <th>Rating</th>
+                                <th>Approval</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody id="listing-reviews-table">

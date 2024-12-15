@@ -284,6 +284,24 @@ class Photo {
         }
     }
 
+    // Add the deleteById method
+    static async deleteById(photo_id) {
+        const sql = 'DELETE FROM photos WHERE photo_id = ?';
+        try {
+            await new Promise((resolve, reject) => {
+                db.run(sql, [photo_id], function(err) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+
     // Add other necessary methods as needed
 }
 

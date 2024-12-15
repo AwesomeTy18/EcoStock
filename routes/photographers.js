@@ -5,6 +5,7 @@ const fs = require('fs'); // Add this import
 const path = require('path'); // Add this import
 const Photo = require('../models/Photo'); // Add this import
 const processImages = require('../scripts/processImages'); // Add this import
+const Review = require('../models/Review'); // Add this import
 
 function splitBuffer(buffer, separator) {
     const index = buffer.indexOf(separator);
@@ -150,6 +151,32 @@ const handlePhotographers = async (req, res, parsedUrl) => {
                 console.log(err);
                 utils.sendJsonResponse(res, 500, { success: false, message: 'Server error.' });
             });
+        });
+    }
+    else if (pathname === '/api/photographers/listings' && method === 'GET') {
+        // Get the photographer's own listings
+        authenticateToken(req, res, async () => {
+            const user = req.user;
+            if (user.roles.includes('photographer')) {
+                try {
+                    const photos = await Photo.findByPhotographerId(user.user_id);
+                    // For each photo, get the average rating
+                    for (const photo of photos) {
+                        const reviews = await Review.findByPhotoId(parseInt(photo.photo_id)); // Awaited async function
+                        const avgRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length || 0;
+                        photo.average_rating = avgRating;
+                    }
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify(photos));
+                } catch (error) {
+                    console.error('Error fetching photographer listings:', error);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: 'Internal server error' }));
+                }
+            } else {
+                res.writeHead(403, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ message: 'Forbidden' }));
+            }
         });
     }
     else if (method === 'GET') {

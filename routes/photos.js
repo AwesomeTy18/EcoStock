@@ -76,9 +76,95 @@ const handlePhotos = async (req, res, parsedUrl, session) => { // Added async
             console.log('Unhandled GET path:', pathname);
             utils.sendJsonResponse(res, 405, { success: false, message: 'Method Not Allowed' });
         }
+    } else if (method === 'DELETE' && pathname === '/api/photos/admindelete') {
+        console.log('Handling DELETE /api/photos/admindelete');
+        await authenticateToken(req, res, async () => {
+            checkAdmin(req, res, async () => {
+                try {
+                    // Parse the request body to get the photo_id
+                    let body = '';
+                    req.on('data', chunk => {
+                        body += chunk.toString();
+                    });
+                    req.on('end', async () => {
+                        const { photo_id } = JSON.parse(body);
+                        if (!photo_id) {
+                            utils.sendJsonResponse(res, 400, { success: false, message: 'photo_id is required' });
+                            return;
+                        }
+        
+                        // Attempt to delete the photo
+                        try {
+                            await Photo.deleteById(photo_id);
+                            utils.sendJsonResponse(res, 200, { success: true, message: 'Photo deleted successfully' });
+                        } catch (err) {
+                            console.error('Error deleting photo:', err);
+                            utils.sendJsonResponse(res, 500, { success: false, message: 'Internal server error' });
+                        }
+                    });
+                } catch (err) {
+                    console.error('Error handling DELETE /api/photos:', err);
+                    utils.sendJsonResponse(res, 500, { success: false, message: 'Internal server error' });
+                }
+            });
+        });
+    } else if (method === 'DELETE' && pathname === '/api/photos') {
+        console.log('Handling DELETE /api/photos');
+        await authenticateToken(req, res, async () => {
+            checkPhotographer(req, res, async () => {
+                let body = '';
+                req.on('data', chunk => {
+                    body += chunk.toString();
+                });
+                req.on('end', async () => {
+                    const { photo_id } = JSON.parse(body);
+                    const photo = await Photo.findById(photo_id);
+                    let photographer_id;
+                    if (photo) {
+                        photographer_id = photo.photographer_id;
+                    } else {
+                        utils.sendJsonResponse(res, 404, { success: false, message: 'Photo not found or unauthorized' });
+                    }
+                    const user = req.user;
+                    if (user.user_id === photographer_id) {
+                        try {
+                            if (photo) {
+                                await Photo.deleteById(photo_id);
+                                utils.sendJsonResponse(res, 200, { success: true, message: 'Photo deleted' });
+                            } else {
+                                utils.sendJsonResponse(res, 404, { success: false, message: 'Photo not found or unauthorized' });
+                            }
+                            
+                        } catch (error) {
+                            console.error('Error deleting photo:', error);
+                            utils.sendJsonResponse(res, 500, { success: false, message: 'Internal Server Error' });
+                        }
+                    }
+                });
+            });
+        });
     } else {
         console.log('Unhandled method:', method);
         utils.sendJsonResponse(res, 405, { success: false, message: 'Method Not Allowed' });
+    }
+};
+
+// Middleware to check admin role
+const checkAdmin = (req, res, next) => {
+    const user = req.user;
+    if (user && user.roles.includes('admin')) {
+        next();
+    } else {
+        utils.sendJsonResponse(res, 403, { success: false, message: 'Access denied.' });
+    }
+};
+
+const checkPhotographer = (req, res, next) => {
+    const user = req.user;
+    if (user && user.roles.includes('photographer')) {
+        next();
+    } else {
+        utils.sendJsonResponse(res, 403, { success: false, message: 'Access denied.' });
     }
 };
 

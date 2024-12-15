@@ -105,6 +105,25 @@ nav ul li a {
     background-color: #0056b3;
 }
 
+#delete-button {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+#delete-button:hover {
+    background-color: #c82333;
+}
+
 main {
     flex: 1;
 }
@@ -985,4 +1004,44 @@ footer {
 /* Show active tab */
 .tab.active {
     display: block;
+}
+
+/* Photographer Dashboard Sections */
+.photographer-section {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.admin-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.photographer-section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.photographer-section th, .photographer-section td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.photographer-section th {
+    background-color: #f2f2f2;
+}
+
+.photographer-section a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.photographer-section a:hover {
+    text-decoration: underline;
 }
