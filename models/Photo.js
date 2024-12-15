@@ -182,7 +182,8 @@ class Photo {
                 date_taken TEXT,
                 watermark_url TEXT,
                 high_res_url TEXT,
-                created_at TEXT
+                created_at TEXT,
+                pending_approval BOOLEAN DEFAULT 1
             );
         `;
     }

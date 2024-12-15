@@ -84,6 +84,20 @@ class Purchase {
                     purchase_date: '2023-09-02T11:30:00Z',
                     receipt_url: 'http://example.com/receipts/302.json',
                 },
+                {
+                    purchase_id: 303,
+                    user_id: 3,
+                    photo_id: 103,
+                    purchase_date: '2023-09-03T12:45:00Z',
+                    receipt_url: 'http://example.com/receipts/303.json',
+                },
+                {
+                    purchase_id: 304,
+                    user_id: 3,
+                    photo_id: 101,
+                    purchase_date: '2023-09-04T13:00:00Z',
+                    receipt_url: 'http://example.com/receipts/304.json',
+                }
             ];
 
             for (const purchaseData of samplePurchases) {

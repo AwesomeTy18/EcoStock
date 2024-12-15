@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     displayUserInfo();
     const currentPage = window.location.pathname;
 
-    // Existing photo gallery code for index
+
     if (currentPage === '/' || currentPage === '/index') {
         loadPhotos();
     }

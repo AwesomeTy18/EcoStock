@@ -6,8 +6,6 @@ const utils = require('../utils.js');
 // Import necessary functions from utils.js
 const { generateToken, serializeCookie, authenticateToken } = require('../utils.js');
 
-// ...existing code...
-
 /**
  * Handles user-related API requests.
  * @param {http.IncomingMessage} req 
