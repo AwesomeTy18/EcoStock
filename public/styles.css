@@ -852,6 +852,8 @@ footer {
     max-width: 500px;
     margin: 0 auto;
     margin-bottom: 1em;
+    display: flex;
+    flex-direction: column;
 }
 
 #photographer-application-form h3, #image-application-form h3 {
