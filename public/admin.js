@@ -118,16 +118,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.appendChild(imageCell);
 
                 const photographerCell = document.createElement('td');
-                photographerCell.textContent = image.photographer_name;
+                
+                // Fetch photographer's name using photographer_id
+                fetch(`/api/users/${image.photographer_id}`)
+                    .then(response => response.json())
+                    .then(user => {
+                        photographerCell.textContent = user.name;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching photographer name:', error);
+                        photographerCell.textContent = 'Unknown';
+                    });
+
                 row.appendChild(photographerCell);
 
                 const titleCell = document.createElement('td');
                 titleCell.textContent = image.title;
                 row.appendChild(titleCell);
 
+                const descriptionCell = document.createElement('td');
+                descriptionCell.textContent = image.description;
+                row.appendChild(descriptionCell);
+
+                const priceCell = document.createElement('td');
+                priceCell.textContent = image.price;
+                row.appendChild(priceCell);
+
+                const locationCell = document.createElement('td');
+                locationCell.textContent = image.location;
+                row.appendChild(locationCell);
+
                 const dateCell = document.createElement('td');
-                dateCell.textContent = new Date(image.created_at).toLocaleDateString();
+                dateCell.textContent = image.date_taken;
                 row.appendChild(dateCell);
+
+                const dateRequested = document.createElement('td');
+                dateRequested.textContent = image.created_at.split('T')[0];
+                row.appendChild(dateRequested);
 
                 const actionCell = document.createElement('td');
 
