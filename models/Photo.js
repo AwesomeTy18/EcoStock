@@ -1,7 +1,7 @@
 const db = require('../db.js');
 
 class Photo {
-    constructor(photo_id, photographer_id, price, title, description, location, date_taken, watermark_url, high_res_url, created_at) {
+    constructor(photo_id, photographer_id, price, title, description, location, date_taken, watermark_url, high_res_url, created_at, pending_approval) {
         this.photo_id = photo_id;
         this.photographer_id = photographer_id;
         this.price = price;
@@ -12,16 +12,17 @@ class Photo {
         this.watermark_url = watermark_url;
         this.high_res_url = high_res_url;
         this.created_at = created_at;
+        this.pending_approval = pending_approval;
     }
 
     async save() {
-        const sql = `INSERT INTO photos (photo_id, photographer_id, price, title, description, location, date_taken, watermark_url, high_res_url, created_at)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const sql = `INSERT INTO photos (photo_id, photographer_id, price, title, description, location, date_taken, watermark_url, high_res_url, created_at, pending_approval)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         try {
             const result = await new Promise((resolve, reject) => {
                 db.run(sql, [
                     this.photo_id, this.photographer_id, this.price, this.title, this.description,
-                    this.location, this.date_taken, this.watermark_url, this.high_res_url, new Date().toISOString()
+                    this.location, this.date_taken, this.watermark_url, this.high_res_url, new Date().toISOString(), this.pending_approval
                 ], function(err) {
                     if (err) reject(err);
                     else resolve({ lastID: this.lastID });
@@ -49,7 +50,7 @@ class Photo {
             });
             return row ? new Photo(
                 row.photo_id, row.photographer_id, row.price, row.title, row.description,
-                row.location, row.date_taken, row.watermark_url, row.high_res_url, row.created_at
+                row.location, row.date_taken, row.watermark_url, row.high_res_url, row.created_at, row.pending_approval
             ) : null;
         } catch (err) {
             throw err;
@@ -65,17 +66,17 @@ class Photo {
                 }
                 const photos = rows.map(row => new Photo(
                     row.photo_id, row.photographer_id, row.price, row.title, row.description,
-                    row.location, row.date_taken, row.watermark_url, row.high_res_url, row.created_at
+                    row.location, row.date_taken, row.watermark_url, row.high_res_url, row.created_at, row.pending_approval
                 ));
                 resolve(photos);
             });
         });
     }
 
-    static async create(id, title, description, price, watermark_url, high_res_url, photographer_id) {
+    static async create(id, title, description, price, watermark_url, high_res_url, photographer_id, pending_approval = 1) {
         const newPhoto = new Photo(
             id, photographer_id, price, title, description, 'Unknown',
-            new Date().toISOString(), watermark_url, high_res_url, new Date().toISOString()
+            new Date().toISOString(), watermark_url, high_res_url, new Date().toISOString(), pending_approval
         );
         return await newPhoto.save();
     }
@@ -107,6 +108,7 @@ class Photo {
                     watermark_url: '/photos/watermark101.jpg',
                     high_res_url: '/photos/highres101.jpg',
                     created_at: new Date().toISOString(),
+                    pending_approval: 0,
                 },
                 {
                     photo_id: 102,
@@ -119,6 +121,7 @@ class Photo {
                     watermark_url: '/photos/watermark102.jpg',
                     high_res_url: '/photos/highres102.jpg',
                     created_at: new Date().toISOString(),
+                    pending_approval: 0,
                 },
                 {
                     photo_id: 103,
@@ -131,6 +134,7 @@ class Photo {
                     watermark_url: '/photos/watermark103.jpg',
                     high_res_url: '/photos/highres103.jpg',
                     created_at: new Date().toISOString(),
+                    pending_approval: 0,
                 },
                 {
                     photo_id: 104,
@@ -143,6 +147,7 @@ class Photo {
                     watermark_url: '/photos/watermark104.jpg',
                     high_res_url: '/photos/highres104.jpg',
                     created_at: new Date().toISOString(),
+                    pending_approval: 0,
                 },
                 {
                     photo_id: 105,
@@ -155,13 +160,14 @@ class Photo {
                     watermark_url: '/photos/watermark105.jpg',
                     high_res_url: '/photos/highres105.jpg',
                     created_at: new Date().toISOString(),
+                    pending_approval: 1,
                 },
             ];
 
             for (const photoData of samplePhotos) {
                 const newPhoto = new Photo(
                     photoData.photo_id, photoData.photographer_id, photoData.price, photoData.title, photoData.description,
-                    photoData.location, photoData.date_taken, photoData.watermark_url, photoData.high_res_url, photoData.created_at
+                    photoData.location, photoData.date_taken, photoData.watermark_url, photoData.high_res_url, photoData.created_at, photoData.pending_approval
                 );
                 await newPhoto.save();
             }
