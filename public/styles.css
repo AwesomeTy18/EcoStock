@@ -869,10 +869,14 @@ footer {
 #photographer-application-form textarea,
 #image-application-form input,
 #image-application-form textarea {
-    display: block;
-    margin-bottom: 1em;
-    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#image-application-form input {
+    width: 100%;
 }
 
 #photographer-application-form button.btn,
