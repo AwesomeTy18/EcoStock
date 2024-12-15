@@ -20,11 +20,16 @@ async function processImages() {
                 console.log(`Processing ${file}...`);
 
                 // Add watermark and downsample to 720p
-                await sharp(inputPath)
-                    .resize({ width: 1280, height: 720, fit: 'inside' }) // Downsample to 720p
-                    .composite([{ input: watermarkPath, gravity: 'center' }]) // Add watermark
-                    .toFile(outputPath);
-
+                try {
+                    await sharp(inputPath)
+                        .resize({ width: 1280, height: 720, fit: 'inside' }) // Downsample to 720p
+                        .composite([{ input: watermarkPath, gravity: 'center' }]) // Add watermark
+                        .toFile(outputPath);
+                }
+                catch (error) {
+                    console.error(`Error processing ${file}:`, error);
+                    continue; // Skip to the next file
+                }
                 console.log(`Processed ${file} and saved as ${outputPath}`);
             }
         }
