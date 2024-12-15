@@ -78,7 +78,7 @@ http://localhost:3000
 ## Technologies Used
 
 - **Frontend**: HTML, CSS, JavaScript
-- **Backend**: Node.js, Express.js
+- **Backend**: Node.js
 - **Database**: SQLite3
 - **Authentication**: JSON Web Tokens (JWT)
 - **Email Services**: SendGrid
