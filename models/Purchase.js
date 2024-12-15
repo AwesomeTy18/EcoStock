@@ -72,7 +72,7 @@ class Purchase {
             const samplePurchases = [
                 {
                     purchase_id: 301,
-                    user_id: 7,
+                    user_id: 1,
                     photo_id: 101,
                     purchase_date: '2023-09-01T10:00:00Z',
                     receipt_url: 'http://example.com/receipts/301.json',
