@@ -48,7 +48,7 @@ EcoStock is a web-based platform that connects photographers with customers look
 4. **Initialize the Database**
 
    ```bash
-   node scripts/initDatabase.js
+   npm run create-db
    ```
 
 5. **Start the Server**
@@ -83,31 +83,6 @@ http://localhost:3000
 - **Authentication**: JSON Web Tokens (JWT)
 - **Email Services**: SendGrid
 - **Payment Processing**: PayPal REST SDK
-
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. **Fork the Repository**
-2. **Create a Feature Branch**
-
-   ```bash
-   git checkout -b feature/YourFeature
-   ```
-
-3. **Commit Your Changes**
-
-   ```bash
-   git commit -m "Add YourFeature"
-   ```
-
-4. **Push to the Branch**
-
-   ```bash
-   git push origin feature/YourFeature
-   ```
-
-5. **Open a Pull Request**
 
 ## License
 
