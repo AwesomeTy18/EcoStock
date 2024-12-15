@@ -73,10 +73,10 @@ class Photo {
         });
     }
 
-    static async create(id, title, description, price, watermark_url, high_res_url, photographer_id, pending_approval = 1) {
+    static async create(id, title, description, price, location, date_taken, watermark_url, high_res_url, photographer_id, created_at, pending_approval = 1) {
         const newPhoto = new Photo(
-            id, photographer_id, price, title, description, 'Unknown',
-            new Date().toISOString(), watermark_url, high_res_url, new Date().toISOString(), pending_approval
+            id, photographer_id, price, title, description, location,
+            date_taken, watermark_url, high_res_url, created_at, pending_approval
         );
         return await newPhoto.save();
     }

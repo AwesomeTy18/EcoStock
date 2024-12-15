@@ -117,12 +117,14 @@ const handlePhotographers = async (req, res, parsedUrl) => {
 
                 const newPhoto = {
                     photo_id: randId,
-                    photographer_id: req.user.user_id,
                     title,
                     description,
                     price,
+                    location,
+                    date_taken,
                     watermark_url: `/photos/${watermarkname}`,
                     high_res_url: `/photos/${highresname}`,
+                    photographer_id: req.user.user_id,
                     created_at: new Date().toISOString()
                 };
 
@@ -131,9 +133,12 @@ const handlePhotographers = async (req, res, parsedUrl) => {
                     newPhoto.title,
                     newPhoto.description,
                     newPhoto.price,
+                    newPhoto.location,
+                    newPhoto.date_taken,
                     newPhoto.watermark_url,
                     newPhoto.high_res_url,
-                    newPhoto.photographer_id
+                    newPhoto.photographer_id,
+                    newPhoto.created_at
                 );
 
                 await processImages();
