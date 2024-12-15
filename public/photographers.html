@@ -14,13 +14,13 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/cart" class="auth-required">Cart</a></li>
-                <li><a href="/photographers" class="auth-required">Sell</a></li>
                 <li id="auth-link" class="unauthenticated"><a href="/login">Login</a></li>
                 <li id="user-info" class="dropdown auth-required" style="display: none;">
                     <a href="#" class="dropbtn">User</a>
                     <div class="dropdown-content">
                         <a href="/my-pictures" id="view-pics">My Pictures</a>
                         <a href="/my-reviews" id="view-reviews">My Reviews</a>
+                        
                         <a href="#" id="logout">Logout</a>
                     </div>
                 </li>
@@ -36,18 +36,15 @@
                 <button class="btn tab-button" data-tab="my-listings-reviews">My Listings & Reviews</button>
             </div>
 
-            <section id="image-requests" class="tab photographer-section active">
-                <div id="image-application" style="display: none;">
-                    <h2>Image Request</h2>
+            <section id="upload-image" class="tab photographer-section active">
+                <div id="image-application">
+                    <h2>Upload a new image</h2>
                     <form id="image-application-form">
-                        <label for="full_name">Full Name:</label>
-                        <input type="text" id="full_name" name="full_name" required>
+                        <label for="title">Image Title:</label>
+                        <input type="text" id="title" name="title" required>
         
-                        <label for="image_name">Image Name:</label>
-                        <input type="text" id="image_name" name="image_name" required>
-        
-                        <label for="image_description">Image Description:</label>
-                        <input type="text" id="image_description" name="image_description" required>
+                        <label for="description">Image Description:</label>
+                        <input type="text" id="description" name="description" required>
                         
                         <label for="price">Price:</label>
                         <input type="number" id="price" name="price" required>
@@ -67,7 +64,7 @@
             </section>
     
             <!-- Listings & Reviews -->
-            <section id="listing-reviews" class="tab photographer-section active">
+            <section id="my-listings-reviews" class="tab photographer-section">
                 <div class="listings-reviews">
                     <h2>Listings & Reviews</h2>
                     <table>
@@ -82,6 +79,7 @@
                     </table>
                 </div>
             </section>
+        </div>
 
         <!-- Photographer Application Form -->
         <div id="photographer-application" style="display: none;">

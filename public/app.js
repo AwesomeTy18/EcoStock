@@ -900,7 +900,7 @@ window.onclick = function(event) {
 }
 
 // Handle Photographer Form Submission
-const photographerForm = document.getElementById('photographer-form-element');
+const photographerForm = document.getElementById('photographer-application-form');
 if (photographerForm) {
     console.log('Photographer form found. Attaching event listener.');
     photographerForm.addEventListener('submit', (e) => {
@@ -908,7 +908,7 @@ if (photographerForm) {
         const fullName = document.getElementById('full_name').value.trim();
         const aboutMe = document.getElementById('about_me').value.trim();
         const portfolioURL = document.getElementById('portfolio_url').value.trim();
-        const message = document.getElementById('photographer-form-message');
+        const message = document.getElementById('photographer-message');
 
         fetch('/api/photographers', {
             method: 'POST',
@@ -948,12 +948,15 @@ function loadPhotographerDashboard() {
     .then(response => response.json())
     .then(data => {
         const dashboardDiv = document.getElementById('photographer-dashboard');
-        const formDiv = document.getElementById('photographer-form');
+        const formDiv = document.getElementById('photographer-application');
         if (data.message === 'Valid') {
-            dashboardDiv.textContent = 'Valid';
+            dashboardDiv.style.display = 'block';
             formDiv.style.display = 'none';
         } else if (data.message === 'Pending') {
             dashboardDiv.textContent = 'Your photographer application is pending approval.';
+            dashboardDiv.style.textAlign = 'center';
+            dashboardDiv.style.margin = '1em';
+            dashboardDiv.style.display = 'block';
             formDiv.style.display = 'none';
         } else if (data.message === 'Access Denied') {
             dashboardDiv.style.display = 'none';

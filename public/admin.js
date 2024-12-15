@@ -125,9 +125,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 titleCell.textContent = image.title;
                 row.appendChild(titleCell);
 
+                const descriptionCell = document.createElement('td');
+                descriptionCell.textContent = image.description;
+                row.appendChild(descriptionCell);
+
+                const priceCell = document.createElement('td');
+                priceCell.textContent = image.price;
+                row.appendChild(priceCell);
+
+                const locationCell = document.createElement('td');
+                locationCell.textContent = image.location;
+                row.appendChild(locationCell);
+
                 const dateCell = document.createElement('td');
                 dateCell.textContent = new Date(image.created_at).toLocaleDateString();
                 row.appendChild(dateCell);
+
+                const uploadDateCell = document.createElement('td');
+                uploadDateCell.textContent = image.created_at;
+                row.appendChild(uploadDateCell);
 
                 const actionCell = document.createElement('td');
 

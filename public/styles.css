@@ -853,7 +853,7 @@ footer {
     justify-content: center;
 }
 
-#photographer-form {
+#photographer-application-form, #image-application-form {
     background-color: #fff;
     border: 2px solid #007bff;
     border-radius: 10px;
@@ -861,34 +861,39 @@ footer {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     max-width: 500px;
     margin: 0 auto;
+    margin-bottom: 1em;
 }
 
-#photographer-form h3 {
+#photographer-application-form h3, #image-application-form h3 {
     text-align: center;
     color: #007bff;
     margin-bottom: 20px;
 }
 
-#photographer-form label {
+#photographer-application-form label, #image-application-form label {
     font-weight: bold;
     color: #555;
 }
 
-#photographer-form input,
-#photographer-form textarea {
+#photographer-application-form input,
+#photographer-application-form textarea,
+#image-application-form input,
+#image-application-form textarea {
     display: block;
     margin-bottom: 1em;
     background-color: #f9f9f9;
     border: 1px solid #ccc;
 }
 
-#photographer-form button.btn {
+#photographer-application-form button.btn,
+#image-application-form button.btn {
     width: 100%;
     background-color: #28a745;
     transition: background-color 0.3s;
 }
 
-#photographer-form button.btn:hover {
+#photographer-application-form button.btn:hover,
+#image-application-form button.btn:hover {
     background-color: #218838;
 }
 /* Admin Dashboard Sections */

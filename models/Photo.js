@@ -189,7 +189,12 @@ class Photo {
     }
 
     static async findPending() {
-        const sql = 'SELECT * FROM photos WHERE pending_approval = 1';
+        const sql = `
+            SELECT photos.*, users.name AS photographer_name
+            FROM photos
+            JOIN users ON photos.photographer_id = users.user_id
+            WHERE photos.pending_approval = 1
+        `;
         try {
             const rows = await new Promise((resolve, reject) => {
                 db.all(sql, [], (err, rows) => {
@@ -197,18 +202,22 @@ class Photo {
                     else resolve(rows);
                 });
             });
-            return rows.map(row => new Photo(
-                row.photo_id,
-                row.photographer_id,
-                row.price,
-                row.title,
-                row.description,
-                row.location,
-                row.date_taken,
-                row.watermark_url,
-                row.high_res_url,
-                row.created_at
-            ));
+            return rows.map(row => {
+                const photo = new Photo(
+                    row.photo_id,
+                    row.photographer_id,
+                    row.price,
+                    row.title,
+                    row.description,
+                    row.location,
+                    row.date_taken,
+                    row.watermark_url,
+                    row.high_res_url,
+                    row.created_at
+                );
+                photo.photographer_name = row.photographer_name;
+                return photo;
+            });
         } catch (err) {
             throw err;
         }

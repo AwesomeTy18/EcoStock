@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle image upload form submission
-    const uploadForm = document.getElementById('upload-image-form');
+    const uploadForm = document.getElementById('image-application-form');
     if (uploadForm) {
         uploadForm.addEventListener('submit', (e) => {
             e.preventDefault();
