@@ -60,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const emailCell = document.createElement('td');
                 emailCell.textContent = photographer.email;
                 row.appendChild(emailCell);
+
+                const aboutmeCell = document.createElement('td');
+                aboutmeCell.textContent = photographer.photographer_about_me;
+                row.appendChild(aboutmeCell);
     
                 const portfolioCell = document.createElement('td');
                 const portfolioLink = document.createElement('a');

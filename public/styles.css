@@ -29,7 +29,6 @@ nav ul {
     position: relative;
 }
 
-/* Align "Login" and "User" info to the right */
 nav ul li {
     margin: 0 15px;
 }
@@ -43,6 +42,20 @@ nav ul li a {
 #user-info {
     position: static;
     margin-left: auto; /* Pushes these items to the far right */
+}
+
+.admin-button {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.admin-button:hover {
+    background-color: #c82333;
 }
 
 #photo-gallery {
@@ -518,11 +531,6 @@ footer {
 /* Style for the price text within photo cards */
 .photo-card p strong {
     color: #333;
-}
-
-.photo-card p:nth-of-type(3) { /* Assuming price is the third <p> element */
-    font-size: 1.1em;
-    margin-top: 5px;
 }
 
 /* Button styles */
