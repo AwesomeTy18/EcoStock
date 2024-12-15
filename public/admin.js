@@ -96,6 +96,65 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading pending photographers:', error);
         });
     }
+
+    // Load pending image requests
+    const imageRequestsTableBody = document.getElementById('image-requests-table');
+    if (imageRequestsTableBody) {
+        fetch('/api/admin/pending-images', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(pendingImages => {
+            imageRequestsTableBody.innerHTML = '';
+            pendingImages.forEach(image => {
+                const row = document.createElement('tr');
+
+                const imageCell = document.createElement('td');
+                const img = document.createElement('img');
+                img.src = image.watermark_url;
+                img.alt = image.title;
+                img.width = 100;
+                imageCell.appendChild(img);
+                row.appendChild(imageCell);
+
+                const photographerCell = document.createElement('td');
+                photographerCell.textContent = image.photographer_name;
+                row.appendChild(photographerCell);
+
+                const titleCell = document.createElement('td');
+                titleCell.textContent = image.title;
+                row.appendChild(titleCell);
+
+                const dateCell = document.createElement('td');
+                dateCell.textContent = new Date(image.created_at).toLocaleDateString();
+                row.appendChild(dateCell);
+
+                const actionCell = document.createElement('td');
+
+                const approveButton = document.createElement('button');
+                approveButton.className = 'btn btn-approve approve-image-btn';
+                approveButton.textContent = 'Approve';
+                approveButton.addEventListener('click', () => {
+                    approveImage(image.photo_id, row);
+                });
+                actionCell.appendChild(approveButton);
+
+                const denyButton = document.createElement('button');
+                denyButton.className = 'btn btn-danger deny-image-btn';
+                denyButton.textContent = 'Deny';
+                denyButton.addEventListener('click', () => {
+                    denyImage(image.photo_id, row);
+                });
+                actionCell.appendChild(denyButton);
+
+                row.appendChild(actionCell);
+                imageRequestsTableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading pending images:', error);
+        });
+    }
 });
 
 function approvePhotographer(user_id, tableRow) {
@@ -139,5 +198,49 @@ function rejectPhotographer(user_id, tableRow) {
     })
     .catch(error => {
         console.error('Error rejecting photographer:', error);
+    });
+}
+
+function approveImage(photo_id, tableRow) {
+    fetch('/api/admin/approve-image', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ photo_id })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Image ID ${photo_id} approved.`);
+            tableRow.remove();
+        } else {
+            alert(`Failed to approve image: ${data.message}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error approving image:', error);
+    });
+}
+
+function denyImage(photo_id, tableRow) {
+    fetch('/api/admin/deny-image', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ photo_id })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Image ID ${photo_id} denied.`);
+            tableRow.remove();
+        } else {
+            alert(`Failed to deny image: ${data.message}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error denying image:', error);
     });
 }

@@ -28,32 +28,87 @@
         </nav>
     </header>
     <main>
-        <section id="photographer-dashboard-section">
-            <h2>Photographer Dashboard</h2>
-            <div id="photographer-dashboard">
-                <!-- Content will be loaded via JavaScript -->
+        <!-- Photographer Dashboard -->
+        <div id="photographer-dashboard" style="display: none;">
+            <!-- Tabs Navigation -->
+            <div class="tabs" style="max-width: 1200px; margin: 20px auto;">
+                <button class="btn tab-button active" data-tab="upload-image">Upload Image</button>
+                <button class="btn tab-button" data-tab="my-listings-reviews">My Listings & Reviews</button>
             </div>
-            <div id="photographer-form" style="display: none;">
-                <h3>Become a Photographer</h3>
-                <form id="photographer-form-element">
-                    <label for="full_name">Full Name:</label>
-                    <input type="text" id="full_name" name="full_name" required>
-                    
-                    <label for="about_me">About Me:</label>
-                    <textarea id="about_me" name="about_me" required></textarea>
-                    
-                    <label for="portfolio_url">Portfolio URL:</label>
-                    <input type="url" id="portfolio_url" name="portfolio_url" required>
-                    
-                    <button type="submit" class="btn">Submit</button>
-                </form>
-                <p id="photographer-form-message"></p>
-            </div>
-        </section>
+
+            <section id="image-requests" class="tab photographer-section active">
+                <div id="image-application" style="display: none;">
+                    <h2>Image Request</h2>
+                    <form id="image-application-form">
+                        <label for="full_name">Full Name:</label>
+                        <input type="text" id="full_name" name="full_name" required>
+        
+                        <label for="image_name">Image Name:</label>
+                        <input type="text" id="image_name" name="image_name" required>
+        
+                        <label for="image_description">Image Description:</label>
+                        <input type="text" id="image_description" name="image_description" required>
+                        
+                        <label for="price">Price:</label>
+                        <input type="number" id="price" name="price" required>
+                        
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location" required>
+
+                        <label for="date_taken">Date Taken:</label>
+                        <input type="date" id="date_taken" name="date_taken" required>
+
+                        <label for="image">Image:</label>
+                        <input type="file" id="image" name="image" required>
+
+                        <button type="submit" class="btn">Submit Request</button>
+                    </form>
+                </div>
+            </section>
+    
+            <!-- Listings & Reviews -->
+            <section id="listing-reviews" class="tab photographer-section active">
+                <div class="listings-reviews">
+                    <h2>Listings & Reviews</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="listing-reviews-table">
+                            <!-- Dynamically populated content -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        <!-- Photographer Application Form -->
+        <div id="photographer-application" style="display: none;">
+            <h2>Apply to Become a Photographer</h2>
+            <form id="photographer-application-form">
+                <label for="full_name">Full Name:</label>
+                <input type="text" id="full_name" name="full_name" required>
+
+                <label for="about_me">About Me:</label>
+                <textarea id="about_me" name="about_me" required></textarea>
+
+                <label for="portfolio_url">Portfolio URL:</label>
+                <input type="url" id="portfolio_url" name="portfolio_url" required>
+
+                <button type="submit" class="btn">Submit Application</button>
+            </form>
+        </div>
+
+        <!-- Message Div for Pending/Application Messages -->
+        <div id="photographer-message" style="display: none; color: blue;">
+            <!-- Messages will appear here -->
+        </div>
     </main>
     <footer>
         <p>&copy; 2024 EcoStock</p>
     </footer>
     <script src="/app.js"></script>
+    <script src="/photographers.js"></script>
 </body>
 </html>
